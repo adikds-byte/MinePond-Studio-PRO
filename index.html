@@ -1,0 +1,3744 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MinePond Studio™ PRO – Analisis & Desain Visual Settling Pond Penambangan</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* CSS Variables for Dark Theme (Default) */
+    :root, [data-theme="dark"] {
+      --bg-primary: #0b1120;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-card-inner: #151f30;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --border-focus: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-heading: #38bdf8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #0284c7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --select-bg: #1e293b;
+      --select-text: #f8fafc;
+      --option-bg: #1e293b;
+      --option-text: #f8fafc;
+      --canvas-bg: #080e1a;
+      --overlay-bg: rgba(15, 23, 42, 0.94);
+      --table-header-bg: #162032;
+      --table-border: #334155;
+      --table-row-hover: #24344d;
+      --rec-box-bg: #162238;
+      --rec-box-border: #38bdf8;
+      --rec-box-text: #cbd5e1;
+      --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    /* CSS Variables for Light Theme */
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-inner: #f1f5f9;
+      --bg-input: #ffffff;
+      --border-color: #cbd5e1;
+      --border-focus: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-heading: #0369a1;
+      --accent-cyan: #0284c7;
+      --accent-blue: #0284c7;
+      --accent-amber: #b45309;
+      --accent-emerald: #059669;
+      --accent-rose: #e11d48;
+      --select-bg: #ffffff;
+      --select-text: #0f172a;
+      --option-bg: #ffffff;
+      --option-text: #0f172a;
+      --canvas-bg: #f8fafc;
+      --overlay-bg: rgba(255, 255, 255, 0.96);
+      --table-header-bg: #f1f5f9;
+      --table-border: #e2e8f0;
+      --table-row-hover: #f8fafc;
+      --rec-box-bg: #f0fdf4;
+      --rec-box-border: #059669;
+      --rec-box-text: #1e293b;
+      --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .font-tech { font-family: 'Orbitron', sans-serif; }
+    .mono-font { font-family: 'JetBrains Mono', monospace; }
+
+    /* Top Navigation Bar */
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-card);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.3rem;
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-heading);
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    /* PRESET SELECTOR & EXPLICIT HIGH CONTRAST SELECT FIX */
+    .preset-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--bg-input);
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .preset-selector label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    select, .preset-selector select {
+      background-color: var(--select-bg) !important;
+      color: var(--select-text) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 6px;
+      padding: 0.4rem 2rem 0.4rem 0.65rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230284c7'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      background-size: 1rem;
+    }
+
+    select:focus, .preset-selector select:focus {
+      border-color: var(--border-focus) !important;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    }
+
+    /* GUARANTEED OPTION LIST VISIBILITY IN DARK & LIGHT MODE */
+    select option {
+      background-color: var(--option-bg) !important;
+      color: var(--option-text) !important;
+      padding: 8px 12px !important;
+      font-size: 0.85rem !important;
+      font-weight: 500 !important;
+    }
+
+    select option:hover, select option:focus, select option:checked {
+      background-color: var(--accent-blue) !important;
+      color: #ffffff !important;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      color: white;
+      box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25);
+    }
+    .btn-primary:hover {
+      filter: brightness(0.9);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card-inner);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+      border-color: var(--border-focus);
+    }
+
+    .btn-emerald {
+      background-color: #059669;
+      color: white;
+    }
+    .btn-emerald:hover {
+      background-color: #047857;
+    }
+
+    .btn-purple {
+      background-color: #7c3aed;
+      color: white;
+    }
+    .btn-purple:hover {
+      background-color: #6d28d9;
+    }
+
+    .btn-theme {
+      background: var(--bg-card-inner);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-theme:hover {
+      border-color: var(--accent-amber);
+    }
+
+    /* Main Container Grid */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      flex: 1;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    @media (max-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow-y: auto;
+      }
+    }
+
+    /* Sidebar / Inputs Panel */
+    .sidebar {
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .sidebar-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-card-inner);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--text-heading);
+      border-bottom-color: var(--accent-blue);
+      background-color: var(--bg-secondary);
+      font-weight: 700;
+    }
+
+    .sidebar-content {
+      padding: 1.25rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .param-group {
+      margin-bottom: 1.25rem;
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .param-group-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .input-field {
+      margin-bottom: 0.85rem;
+    }
+    .input-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .input-label {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-val-display {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-amber);
+      font-weight: 700;
+    }
+
+    .input-control-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      outline: none;
+      accent-color: var(--accent-blue);
+    }
+
+    input[type="number"] {
+      width: 85px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-main);
+      padding: 0.35rem 0.5rem;
+      font-size: 0.82rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--border-focus);
+    }
+
+    .unit-tag {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      width: 42px;
+      font-weight: 600;
+    }
+
+    .info-tooltip {
+      cursor: help;
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      background: var(--border-color);
+      color: var(--text-muted);
+      border-radius: 50%;
+      text-align: center;
+      font-size: 10px;
+      line-height: 15px;
+      margin-left: 4px;
+      font-weight: bold;
+    }
+
+    /* Main Workspace Panel */
+    .workspace {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: var(--bg-primary);
+      overflow-y: auto;
+    }
+
+    /* KPI Summary Row */
+    .kpi-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      padding: 1rem 1.25rem 0.5rem 1.25rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: var(--accent-blue);
+    }
+    .kpi-card.success::before { background-color: var(--accent-emerald); }
+    .kpi-card.warning::before { background-color: var(--accent-amber); }
+    .kpi-card.danger::before { background-color: var(--accent-rose); }
+
+    .kpi-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .kpi-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+
+    .kpi-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-unit {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .kpi-status-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-top: 0.35rem;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-danger { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.4); }
+
+    /* Visualizer Tabs & Canvases */
+    .visualizer-container {
+      padding: 0.75rem 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .view-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-card);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .view-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .view-tab-btn {
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .view-tab-btn.active {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+
+    .canvas-card {
+      background-color: var(--canvas-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      position: relative;
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .canvas-overlay-ctrls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(6px);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-main);
+      font-weight: 600;
+      align-items: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .canvas-overlay-ctrls input[type="range"] {
+      width: 75px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    .canvas-legend {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(6px);
+      padding: 0.5rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      gap: 1rem;
+      font-size: 0.72rem;
+      color: var(--text-main);
+      font-weight: 600;
+      z-index: 10;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-card);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    /* Details Grid */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 0.5rem 1.25rem 1.5rem 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .detail-card-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .table-calc {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .table-calc th {
+      text-align: left;
+      color: var(--text-muted);
+      padding: 0.5rem 0.35rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 700;
+      background: var(--table-header-bg);
+    }
+
+    .table-calc td {
+      padding: 0.5rem 0.35rem;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--text-main);
+    }
+
+    .table-calc tr:hover {
+      background: var(--table-row-hover);
+    }
+
+    .table-calc td.value-col {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .table-calc td.unit-col {
+      text-align: left;
+      color: var(--text-muted);
+      padding-left: 0.5rem;
+      width: 60px;
+      font-weight: 600;
+    }
+
+    /* ==================== 1. LOADING SCREEN STYLING ==================== */
+    @keyframes loading-progress { 0% { width: 0%; } 45% { width: 68%; } 100% { width: 100%; } }
+    .animate-loading-progress { animation: loading-progress 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .loading-dots::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
+    @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60%, 100% { content: '...'; } }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 35px rgba(2, 132, 199, 0.35), inset 0 0 25px rgba(2, 132, 199, 0.2); }
+      50% { box-shadow: 0 0 70px rgba(16, 185, 129, 0.45), inset 0 0 35px rgba(16, 185, 129, 0.25); }
+    }
+    .glow-box-anim { animation: glowPulse 4s ease-in-out infinite; }
+
+    /* ==================== 2. SCREENSAVER STYLING ==================== */
+    @keyframes quoteFade {
+      0% { opacity: 0; transform: translateY(6px); }
+      15% { opacity: 1; transform: translateY(0); }
+      85% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-6px); }
+    }
+    .quote-animated { animation: quoteFade 6s ease-in-out infinite; }
+
+    /* ==================== 3. CHATBOT COPILOT STYLING ==================== */
+    .pulse-ring {
+      box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7);
+      animation: pulse-ring-anim 2s infinite;
+    }
+    @keyframes pulse-ring-anim {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(2, 132, 199, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+    }
+
+    @keyframes chatEntrance { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .chat-card-animated { animation: chatEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .chat-glow-creator { border: 1.5px solid #ec4899 !important; box-shadow: 0 0 25px rgba(236, 72, 153, 0.35); }
+    .chat-glow-stokes { border: 1.5px solid #0284c7 !important; box-shadow: 0 0 25px rgba(2, 132, 199, 0.35); }
+    .chat-glow-compliance { border: 1.5px solid #10b981 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.35); }
+    .chat-glow-warning { border: 1.5px solid #f43f5e !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.35); }
+
+    /* ==================== 4. MODALS & CREATOR AVATAR ==================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10005;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 900px;
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-main);
+      background: var(--bg-primary);
+    }
+
+    .modal-footer {
+      padding: 0.75rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background: var(--bg-card);
+    }
+
+    .programmer-avatar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .programmer-avatar::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 16px;
+      background: conic-gradient(from 0deg, #ec4899, #8b5cf6, #06b6d4, #10b981, #ec4899);
+      animation: rotate 3s linear infinite;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    .programmer-avatar > * { position: relative; z-index: 1; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* Print styles */
+    @media print {
+      body * { visibility: hidden; }
+      #printReportArea, #printReportArea * { visibility: visible; }
+      #printReportArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        color: black !important;
+        padding: 20mm;
+      }
+    }
+  </style>
+</head>
+<body id="appBody">
+
+  <!-- ========================================================================= -->
+  <!-- 1. BOOT / SYSTEM LOADING SCREEN (AUTO DISMISS OR CLICK TO ENTER) -->
+  <!-- ========================================================================= -->
+  <div id="systemLoadingScreen" class="fixed inset-0 z-[10000] bg-[#020617]/95 text-white flex flex-col items-center justify-between p-4 sm:p-6 overflow-y-auto select-none cursor-pointer transition-opacity duration-700" onclick="dismissLoadingScreen()" title="Klik untuk langsung masuk ke dasbor">
+    
+    <!-- Header Loading -->
+    <div style="width: 100%; max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0ea5e9, #0284c7); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 900; box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);">
+          <i class="fa-solid fa-water"></i>
+        </div>
+        <div>
+          <h2 class="font-tech" style="font-size: 1rem; font-weight: 900; color: #38bdf8; display: flex; align-items: center; gap: 0.5rem;">
+            MinePond Studio™ <span style="color: white;">PRO v2.5</span>
+            <span style="font-size: 9px; font-family: monospace; background: #032b43; color: #38bdf8; padding: 2px 6px; border-radius: 4px; border: 1px solid #0284c7;">MINING REPO</span>
+          </h2>
+          <p style="font-size: 10px; color: #94a3b8; font-family: monospace;">Sistem Analisis Hidrologi, Sedimentasi Hukum Stokes & Desain Kolam Pengendapan Tambang</p>
+        </div>
+      </div>
+
+      <!-- Realtime Clock on Loading Screen -->
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.85rem; border-radius: 9999px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(6, 182, 212, 0.4); font-size: 0.75rem; font-family: monospace; color: #67e8f9;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; display: inline-block;"></span>
+        <span id="load-date-display">-</span>
+        <span style="color: #f59e0b;">|</span>
+        <span id="load-time-display" style="color: #f59e0b; font-weight: bold;">00:00:00 WIB</span>
+      </div>
+    </div>
+
+    <!-- Center Interactive Visual Graphic -->
+    <div style="width: 100%; max-width: 550px; margin: auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+      <div style="width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #0c4a6e 0%, #082f49 60%, #020617 100%); border: 2px solid #0284c7; display: flex; align-items: center; justify-content: center; position: relative;" class="glow-box-anim">
+        <canvas id="bootCanvas" width="180" height="180" style="border-radius: 50%;"></canvas>
+        <div style="position: absolute; bottom: 10px; font-size: 9px; font-family: monospace; background: rgba(2, 6, 23, 0.85); padding: 2px 8px; border-radius: 10px; border: 1px solid #0284c7; color: #38bdf8;">
+          Simulasi Aliran Partikel Stokes
+        </div>
+      </div>
+
+      <div>
+        <h1 class="font-tech" style="font-size: 1.4rem; font-weight: 900; letter-spacing: 0.15em; color: #38bdf8; text-transform: uppercase;">MinePond Studio™ PRO</h1>
+        <p style="font-family: monospace; font-size: 0.75rem; color: #94a3b8; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px;">
+          <i class="fa-solid fa-microchip" style="color: #f59e0b; margin-right: 4px;"></i> HYDRAULIC RETENTION & STOKES SEDIMENTATION ENGINE<span class="loading-dots" style="color: #38bdf8;"></span>
+        </p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div style="width: 320px; max-width: 90%; height: 8px; background: #0f172a; border-radius: 9999px; overflow: hidden; border: 1px solid #334155;">
+        <div style="height: 100%; background: linear-gradient(90deg, #0284c7, #10b981, #f59e0b); border-radius: 9999px; box-shadow: 0 0 15px rgba(2, 132, 199, 0.8);" class="animate-loading-progress"></div>
+      </div>
+
+      <div style="font-size: 10px; font-family: monospace; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
+        CALIBRATING STOKES LAW • MONONOBE RAINFALL • KEPMEN ESDM 1827/2018 READY
+      </div>
+    </div>
+
+    <!-- Footer Loading -->
+    <div style="width: 100%; max-width: 800px; margin: 0 auto; text-align: center; padding-bottom: 0.5rem;">
+      <div style="font-size: 11px; font-family: monospace; color: #67e8f9; margin-bottom: 3px;">
+        &ldquo;Pengelolaan air tambang berwawasan lingkungan adalah wujud nyata penerapan Kaidah Teknik Pertambangan yang Baik.&rdquo;
+      </div>
+      <div style="font-size: 10px; font-family: monospace; color: #64748b;">
+        (Klik atau sentuh layar untuk langsung membuka dasbor)
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. SCREENSAVER FULLSCREEN REAL-TIME CLOCK & QUOTES CAROUSEL -->
+  <!-- ========================================================================= -->
+  <div id="minePondScreensaver" style="position: fixed; inset: 0; z-index: 100000; background: rgba(2, 6, 23, 0.96); backdrop-filter: blur(10px); color: white; display: none; flex-direction: column; justify-content: space-between; padding: 2rem; user-select: none; cursor: pointer; transition: all 0.5s ease; opacity: 0;" onclick="turnOffScreensaverMode()">
+    
+    <!-- Header Screensaver -->
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1100px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(2, 132, 199, 0.3); border: 1px solid #0284c7; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-size: 1.25rem;">
+          <i class="fa-solid fa-water animate-pulse"></i>
+        </div>
+        <div>
+          <div class="font-tech" style="font-size: 0.95rem; font-weight: bold; color: white;">Screensaver Pemantauan Kolam Pengendapan Tambang</div>
+          <div style="font-size: 0.75rem; color: #94a3b8; font-family: monospace;">Tekan tombol ESC atau gerakkan mouse untuk kembali ke dasbor</div>
+        </div>
+      </div>
+      <button type="button" onclick="event.stopPropagation(); turnOffScreensaverMode()" class="btn btn-secondary" style="border-color: #0284c7; color: #38bdf8;">
+        <i class="fa-solid fa-xmark"></i> Tutup Screensaver
+      </button>
+    </div>
+
+    <!-- Center Clock & Operational Telemetry -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin: auto; gap: 1rem; width: 100%; max-width: 900px;">
+      <!-- Huge Digital Clock -->
+      <div id="scClockDisplay" class="font-tech" style="font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 900; letter-spacing: 0.05em; background: linear-gradient(to right, #38bdf8, #ffffff, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(2, 132, 199, 0.6);">
+        00:00:00
+      </div>
+
+      <!-- Realtime Date & Timezone -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; font-size: 1.1rem; font-weight: bold; padding: 0.5rem 1.5rem; background: rgba(15, 23, 42, 0.85); border-radius: 12px; border: 1px solid rgba(2, 132, 199, 0.4);">
+        <span id="scDateDisplay" style="color: #bae6fd;">-</span>
+        <span style="color: #f59e0b;">|</span>
+        <span id="scTzDisplay" style="color: #f59e0b; font-family: monospace;">WIB (UTC+7)</span>
+      </div>
+
+      <!-- Live Monitoring Status Badge -->
+      <div style="font-size: 0.8rem; font-family: monospace; font-weight: bold; color: #34d399; background: rgba(2, 6, 23, 0.9); padding: 0.4rem 1.2rem; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.4);">
+        STATUS SETTLING POND: NORMAL • EFISIENSI SEDIMENTASI AKTIF • BAKU MUTU TERKENDALI
+      </div>
+    </div>
+
+    <!-- Wisdom Quotes Carousel -->
+    <div style="width: 100%; max-width: 700px; margin: 0 auto; text-align: center;">
+      <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(2, 132, 199, 0.4); padding: 1rem 1.5rem; border-radius: 14px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: #38bdf8; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 0.35rem;">
+          <i class="fa-solid fa-quote-left"></i>
+          <span>MUTIARA REKAYASA & KESELAMATAN LINGKUNGAN TAMBANG</span>
+          <i class="fa-solid fa-quote-right"></i>
+        </div>
+        <p id="scWisdomQuoteText" class="quote-animated" style="font-size: 0.88rem; font-style: italic; color: #e2e8f0; line-height: 1.5;">
+          "Kaidah teknik pertambangan yang baik adalah kunci menjaga harmoni antara eksploitasi mineral dan kelestarian ekosistem perairan."
+        </p>
+        <span id="scWisdomQuoteAuthor" style="display: block; font-size: 0.72rem; font-family: monospace; color: #38bdf8; font-weight: bold; margin-top: 0.35rem;">
+          — Prinsip Pengelolaan Lingkungan Pertambangan
+        </span>
+      </div>
+      <div style="font-size: 10px; font-family: monospace; color: #64748b; margin-top: 0.75rem;">
+        MinePond Studio™ PRO &bull; Lead Architect: Mohamad Hartadi &bull; Sentuh Layar atau Tekan Tombol Apa Saja untuk Kembali
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOP APPLICATION HEADER -->
+  <!-- ========================================================================= -->
+  <header>
+    <div class="brand-group">
+      <div class="brand-icon">MP</div>
+      <div class="brand-text">
+        <h1>MinePond Studio™ PRO – Analisis & Desain Settling Pond</h1>
+        <p>Aplikasi Rekayasa Hidrologi, Sedimentasi Hukum Stokes & Visualisasi Kolam Pengendapan Tambang</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Dark / Light Mode Switcher -->
+      <button class="btn btn-theme" id="btnThemeToggle" onclick="toggleTheme()" title="Ganti Mode Gelap / Terang (Shortcut: T)">
+        <span id="themeIcon">☀️</span> <span id="lblTheme">Mode Terang</span>
+      </button>
+
+      <!-- Preset Selector with Guaranteed High Contrast -->
+      <div class="preset-selector">
+        <label for="miningPreset">Preset Tambang:</label>
+        <select id="miningPreset" onchange="loadPreset(this.value)">
+          <option value="coal_kalimantan">Tambang Batubara (Kalimantan - Hujan Tinggi)</option>
+          <option value="nickel_laterite">Tambang Nikel Laterit (Sulawesi/Maluku - Lanau Halus)</option>
+          <option value="gold_mineral">Tambang Emas / Mineral Logam Keras</option>
+          <option value="quarry_sand">Quarry Andesit / Pasir Sirtu (Galian C)</option>
+          <option value="custom">Kustom Mandiri (User Defined)</option>
+        </select>
+      </div>
+
+      <!-- Help System Modal Button -->
+      <button class="btn btn-secondary" onclick="openHelpModal()" title="Buku Panduan & Dokumentasi Lengkap (Shortcut: ?)">
+        <i class="fa-solid fa-book-journal-whills text-emerald-400"></i> Panduan & Manual
+      </button>
+
+      <!-- Programmer Credit Modal Button -->
+      <button class="btn btn-purple" onclick="openCreatorModal()" title="Kredit Programmer / Creator Profil">
+        <i class="fa-solid fa-code"></i> Creator
+      </button>
+
+      <button class="btn btn-emerald" onclick="openReportModal()" title="Cetak Laporan Format A4">
+        <i class="fa-solid fa-file-pdf"></i> Laporan Teknis A4
+      </button>
+      <button class="btn btn-primary" onclick="exportDataCSV()" title="Ekspor Data ke CSV">
+        <i class="fa-solid fa-file-csv"></i> Ekspor CSV
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN WORKSPACE LAYOUT -->
+  <!-- ========================================================================= -->
+  <div class="app-layout">
+    
+    <!-- Sidebar Inputs -->
+    <aside class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" onclick="switchInputTab('tab-hidrologi')">1. Hidrologi</button>
+        <button class="tab-btn" onclick="switchInputTab('tab-partikel')">2. Partikel</button>
+        <button class="tab-btn" onclick="switchInputTab('tab-geometri')">3. Geometri</button>
+        <button class="tab-btn" onclick="switchInputTab('tab-operasional')">4. Operasional</button>
+      </div>
+
+      <div class="sidebar-content">
+        
+        <!-- Tab 1: Hidrologi & Debit -->
+        <div id="tab-hidrologi" class="tab-pane">
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Daerah Tangkapan Air (Catchment / DTA)</span>
+              <span class="info-tooltip" title="Karakteristik daerah tangkapan limpasan air hujan tambang">?</span>
+            </div>
+            
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Luas DTA (Catchment Area, A)</span>
+                <span class="input-val-display" id="val_catchmentArea">25.0 Ha</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_catchmentArea" min="1" max="200" step="0.5" value="25" oninput="syncParam('catchmentArea', this.value)">
+                <input type="number" id="num_catchmentArea" min="1" max="200" step="0.5" value="25" oninput="syncParam('catchmentArea', this.value)">
+                <span class="unit-tag">Ha</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Koefisien Limpasan (C)</span>
+                <span class="input-val-display" id="val_runoffCoeff">0.70</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_runoffCoeff" min="0.2" max="0.95" step="0.05" value="0.70" oninput="syncParam('runoffCoeff', this.value)">
+                <input type="number" id="num_runoffCoeff" min="0.2" max="0.95" step="0.05" value="0.70" oninput="syncParam('runoffCoeff', this.value)">
+                <span class="unit-tag">-</span>
+              </div>
+              <small style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 3px;">
+                Tambang aktif: 0.70–0.85; Disposal/Inpit: 0.60–0.75; Hutan/Revegetasi: 0.20–0.40
+              </small>
+            </div>
+          </div>
+
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Presipitasi & Debit Masuk</span>
+              <span class="info-tooltip" title="Curah hujan rencana harian dan intensitas Mononobe">?</span>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Curah Hujan Rencana (R24)</span>
+                <span class="input-val-display" id="val_rainfall">120 mm</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_rainfall" min="30" max="300" step="5" value="120" oninput="syncParam('rainfall', this.value)">
+                <input type="number" id="num_rainfall" min="30" max="300" step="5" value="120" oninput="syncParam('rainfall', this.value)">
+                <span class="unit-tag">mm/hr</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Waktu Konsentrasi (tc)</span>
+                <span class="input-val-display" id="val_tc">0.85 Jam</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_tc" min="0.2" max="5.0" step="0.05" value="0.85" oninput="syncParam('tc', this.value)">
+                <input type="number" id="num_tc" min="0.2" max="5.0" step="0.05" value="0.85" oninput="syncParam('tc', this.value)">
+                <span class="unit-tag">Jam</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Debit Pompa Tambang Tambahan</span>
+                <span class="input-val-display" id="val_pumpFlow">250 m³/jam</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_pumpFlow" min="0" max="1500" step="25" value="250" oninput="syncParam('pumpFlow', this.value)">
+                <input type="number" id="num_pumpFlow" min="0" max="1500" step="25" value="250" oninput="syncParam('pumpFlow', this.value)">
+                <span class="unit-tag">m³/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Karakteristik Partikel & Kualitas Air -->
+        <div id="tab-partikel" class="tab-pane" style="display: none;">
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Sifat Partikel Padatan (Stokes' Law)</span>
+              <span class="info-tooltip" title="Ukuran butir kritis lempung/lanau dan berat jenis partikel padat">?</span>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Diameter Butir Kritis (d)</span>
+                <span class="input-val-display" id="val_particleSize">0.025 mm</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_particleSize" min="0.002" max="0.100" step="0.001" value="0.025" oninput="syncParam('particleSize', this.value)">
+                <input type="number" id="num_particleSize" min="0.002" max="0.100" step="0.001" value="0.025" oninput="syncParam('particleSize', this.value)">
+                <span class="unit-tag">mm</span>
+              </div>
+              <small style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 3px;">
+                Lempung (Clay): 0.002–0.005 mm; Lanau (Silt): 0.005–0.05 mm; Pasir Halus: >0.05 mm
+              </small>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Densitas Partikel Solid (ρs)</span>
+                <span class="input-val-display" id="val_particleDensity">2650 kg/m³</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_particleDensity" min="1800" max="3800" step="50" value="2650" oninput="syncParam('particleDensity', this.value)">
+                <input type="number" id="num_particleDensity" min="1800" max="3800" step="50" value="2650" oninput="syncParam('particleDensity', this.value)">
+                <span class="unit-tag">kg/m³</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Temperatur Air Kolam (T)</span>
+                <span class="input-val-display" id="val_waterTemp">28 °C</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_waterTemp" min="15" max="40" step="1" value="28" oninput="syncParam('waterTemp', this.value)">
+                <input type="number" id="num_waterTemp" min="15" max="40" step="1" value="28" oninput="syncParam('waterTemp', this.value)">
+                <span class="unit-tag">°C</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Konsentrasi TSS & Koagulan</span>
+              <span class="info-tooltip" title="Beban padatan tersuspensi dan efektivitas koagulan/flokulan">?</span>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">TSS Air Limbah Masuk (Inlet)</span>
+                <span class="input-val-display" id="val_tssIn">3500 mg/L</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_tssIn" min="200" max="15000" step="100" value="3500" oninput="syncParam('tssIn', this.value)">
+                <input type="number" id="num_tssIn" min="200" max="15000" step="100" value="3500" oninput="syncParam('tssIn', this.value)">
+                <span class="unit-tag">mg/L</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Target Baku Mutu TSS (Outlet)</span>
+                <span class="input-val-display" id="val_tssTarget">200 mg/L</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_tssTarget" min="50" max="400" step="10" value="200" oninput="syncParam('tssTarget', this.value)">
+                <input type="number" id="num_tssTarget" min="50" max="400" step="10" value="200" oninput="syncParam('tssTarget', this.value)">
+                <span class="unit-tag">mg/L</span>
+              </div>
+              <small style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 3px;">
+                Permen LH 113/2003 (Batubara): Max 300 mg/L; Kepmen ESDM 1827/2018: Target ketat ≤200 mg/L
+              </small>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Faktor Peningkatan Flokulan (PAC/Tawas)</span>
+                <span class="input-val-display" id="val_flocFactor">1.0x (Alami)</span>
+              </div>
+              <div class="input-control-row">
+                <select id="sel_flocFactor" style="width: 100%;" onchange="syncParam('flocFactor', this.value)">
+                  <option value="1.0">Tanpa Kimia / Alami (1.0x kecepatan Stokes)</option>
+                  <option value="2.5">Koagulan Ringan / Tawas Alum (2.5x kecepatan)</option>
+                  <option value="5.0">Poly Aluminium Chloride - PAC (5.0x kecepatan)</option>
+                  <option value="10.0">PAC + Polimer Flokulan Anionik (10.0x kecepatan)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Geometri Kolam -->
+        <div id="tab-geometri" class="tab-pane" style="display: none;">
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Dimensi Kolam & Kompartemen</span>
+              <span class="info-tooltip" title="Ukuran panjang, lebar, kedalaman dan sekat kolam">?</span>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Jumlah Kompartemen (Sel)</span>
+                <span class="input-val-display" id="val_compartments">4 Kompartemen</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_compartments" min="2" max="6" step="1" value="4" oninput="syncParam('compartments', this.value)">
+                <input type="number" id="num_compartments" min="2" max="6" step="1" value="4" oninput="syncParam('compartments', this.value)">
+                <span class="unit-tag">Sel</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Panjang Kolam Total (L)</span>
+                <span class="input-val-display" id="val_pondLength">90.0 m</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_pondLength" min="20" max="300" step="2" value="90" oninput="syncParam('pondLength', this.value)">
+                <input type="number" id="num_pondLength" min="20" max="300" step="2" value="90" oninput="syncParam('pondLength', this.value)">
+                <span class="unit-tag">m</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Lebar Kolam Rata-rata (W)</span>
+                <span class="input-val-display" id="val_pondWidth">25.0 m</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_pondWidth" min="10" max="100" step="1" value="25" oninput="syncParam('pondWidth', this.value)">
+                <input type="number" id="num_pondWidth" min="10" max="100" step="1" value="25" oninput="syncParam('pondWidth', this.value)">
+                <span class="unit-tag">m</span>
+              </div>
+              <small style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 3px;">
+                Rasio L/W saat ini: <span id="lbl_lwRatio" style="color: var(--accent-blue); font-weight: 700;">3.6:1</span> (Disarankan ≥ 3:1)
+              </small>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Kedalaman Air Efektif (Hair)</span>
+                <span class="input-val-display" id="val_waterDepth">2.50 m</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_waterDepth" min="1.0" max="6.0" step="0.1" value="2.5" oninput="syncParam('waterDepth', this.value)">
+                <input type="number" id="num_waterDepth" min="1.0" max="6.0" step="0.1" value="2.5" oninput="syncParam('waterDepth', this.value)">
+                <span class="unit-tag">m</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Kedalaman Ruang Sedimen (Hsed)</span>
+                <span class="input-val-display" id="val_sedimentDepth">1.20 m</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_sedimentDepth" min="0.5" max="3.0" step="0.1" value="1.2" oninput="syncParam('sedimentDepth', this.value)">
+                <input type="number" id="num_sedimentDepth" min="0.5" max="3.0" step="0.1" value="1.2" oninput="syncParam('sedimentDepth', this.value)">
+                <span class="unit-tag">m</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Tinggi Jagaan (Freeboard, Hfb)</span>
+                <span class="input-val-display" id="val_freeboard">0.80 m</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_freeboard" min="0.3" max="2.0" step="0.1" value="0.8" oninput="syncParam('freeboard', this.value)">
+                <input type="number" id="num_freeboard" min="0.3" max="2.0" step="0.1" value="0.8" oninput="syncParam('freeboard', this.value)">
+                <span class="unit-tag">m</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Kemiringan Talud Tanggul (1 : m)</span>
+                <span class="input-val-display" id="val_sideSlope">1 : 1.5</span>
+              </div>
+              <div class="input-control-row">
+                <select id="sel_sideSlope" style="width: 100%;" onchange="syncParam('sideSlope', this.value)">
+                  <option value="1.0">1 : 1.0 (Tanah keras / Dinding pasangan batu)</option>
+                  <option value="1.5" selected>1 : 1.5 (Tanggul tanah lempung kompak - Standar Tambang)</option>
+                  <option value="2.0">1 : 2.0 (Tanah berpasir / Tanggul tinggi)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Operasional & Pengerukan -->
+        <div id="tab-operasional" class="tab-pane" style="display: none;">
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Manajemen Sedimen & Pengerukan</span>
+              <span class="info-tooltip" title="Jadwal pembersihan sedimen sebelum kapasitas kolam berkurang">?</span>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Densitas Kering Sedimen Terpadatkan</span>
+                <span class="input-val-display" id="val_sedDryDensity">1.35 ton/m³</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_sedDryDensity" min="1.0" max="2.0" step="0.05" value="1.35" oninput="syncParam('sedDryDensity', this.value)">
+                <input type="number" id="num_sedDryDensity" min="1.0" max="2.0" step="0.05" value="1.35" oninput="syncParam('sedDryDensity', this.value)">
+                <span class="unit-tag">t/m³</span>
+              </div>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Batas Ambang Pengerukan (Trigger Limit)</span>
+                <span class="input-val-display" id="val_dredgeThreshold">60 %</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_dredgeThreshold" min="30" max="85" step="5" value="60" oninput="syncParam('dredgeThreshold', this.value)">
+                <input type="number" id="num_dredgeThreshold" min="30" max="85" step="5" value="60" oninput="syncParam('dredgeThreshold', this.value)">
+                <span class="unit-tag">%</span>
+              </div>
+              <small style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 3px;">
+                Saat endapan mencapai 50-70% ruang sedimen, excavator/dredger wajib dikerahkan.
+              </small>
+            </div>
+
+            <div class="input-field">
+              <div class="input-label-row">
+                <span class="input-label">Kapasitas Alat Keruk (Excavator / Dredger)</span>
+                <span class="input-val-display" id="val_dredgeProd">45 m³/jam</span>
+              </div>
+              <div class="input-control-row">
+                <input type="range" id="rng_dredgeProd" min="15" max="150" step="5" value="45" oninput="syncParam('dredgeProd', this.value)">
+                <input type="number" id="num_dredgeProd" min="15" max="150" step="5" value="45" oninput="syncParam('dredgeProd', this.value)">
+                <span class="unit-tag">m³/h</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="param-group">
+            <div class="param-group-title">
+              <span>Optimasi Desain Cepat</span>
+              <span class="info-tooltip" title="Otomatis sesuaikan dimensi kolam agar memenuhi baku mutu">⚡</span>
+            </div>
+            <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Sistem akan menghitung panjang dan lebar minimum yang menjamin efisiensi ≥ 95% atau TSS ≤ Baku Mutu.
+            </p>
+            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="autoOptimizePond()">
+              ⚡ Terapkan Dimensi Rekomendasi
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      
+      <!-- Top KPI Row -->
+      <section class="kpi-banner">
+        <div class="kpi-card" id="kpiCard_eff">
+          <div class="kpi-title">Efisiensi Pengendapan (η)</div>
+          <div class="kpi-value-row">
+            <span class="kpi-value" id="kpi_efficiency">94.8</span>
+            <span class="kpi-unit">%</span>
+          </div>
+          <span class="kpi-status-badge badge-success" id="kpi_badge_eff">Sangat Baik</span>
+        </div>
+
+        <div class="kpi-card" id="kpiCard_tss">
+          <div class="kpi-title">TSS Output Terprediksi</div>
+          <div class="kpi-value-row">
+            <span class="kpi-value" id="kpi_tssOut">182</span>
+            <span class="kpi-unit">mg/L</span>
+          </div>
+          <span class="kpi-status-badge badge-success" id="kpi_badge_tss">MEMENUHI BAKU MUTU</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Debit Desain Total (Qin)</div>
+          <div class="kpi-value-row">
+            <span class="kpi-value" id="kpi_debitTotal">1.82</span>
+            <span class="kpi-unit">m³/s</span>
+          </div>
+          <span class="kpi-status-badge badge-success" id="kpi_flowSub">Limpasan + Pompa</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Waktu Tinggal (HRT)</div>
+          <div class="kpi-value-row">
+            <span class="kpi-value" id="kpi_hrt">1.85</span>
+            <span class="kpi-unit">Jam</span>
+          </div>
+          <span class="kpi-status-badge badge-success" id="kpi_badge_hrt">tR / ts = 2.4x</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-title">Interval Pengerukan</div>
+          <div class="kpi-value-row">
+            <span class="kpi-value" id="kpi_dredgeDays">32</span>
+            <span class="kpi-unit">Hari</span>
+          </div>
+          <span class="kpi-status-badge badge-warning" id="kpi_badge_dredge">~ 1.1 Bulan Sekali</span>
+        </div>
+      </section>
+
+      <!-- Visualizer Views & Canvases -->
+      <section class="visualizer-container">
+        
+        <div class="view-toolbar">
+          <div class="view-tabs">
+            <button class="view-tab-btn active" id="btnViewPlan" onclick="switchVisualView('plan')">📐 Tampak Atas (2D Plan)</button>
+            <button class="view-tab-btn" id="btnViewSection" onclick="switchVisualView('section')">📏 Potongan Memanjang (Profile)</button>
+            <button class="view-tab-btn" id="btnViewIso" onclick="switchVisualView('isometric')">🧊 Model Isometrik 3D</button>
+            <button class="view-tab-btn" id="btnViewCurves" onclick="switchVisualView('curves')">📈 Kurva Kinerja Stokes</button>
+          </div>
+
+          <div class="view-controls" id="viewControls">
+            <button class="btn btn-secondary" onclick="turnOnScreensaverMode()" title="Aktifkan Screensaver (Shortcut: S)">
+              <i class="fa-solid fa-desktop text-purple-400"></i> Screensaver
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Container Card -->
+        <div class="canvas-card" id="canvasCard">
+          <canvas id="mainCanvas"></canvas>
+
+          <!-- Floating Overlays -->
+          <div class="canvas-overlay-ctrls" id="canvasControlsOverlay">
+            <span id="overlayLabel">Animasi Aliran:</span>
+            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+              <input type="checkbox" id="chkAnimate" checked onchange="toggleAnimation(this.checked)"> Aktif
+            </label>
+            <span style="margin-left: 8px;">Kecepatan:</span>
+            <input type="range" id="animSpeed" min="0.2" max="3.0" step="0.2" value="1.0" oninput="setAnimSpeed(this.value)">
+          </div>
+
+          <!-- Dynamic Legend -->
+          <div class="canvas-legend" id="canvasLegend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #92400e;"></div>
+              <span>Air Keruh Inlet (TSS Tinggi)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #0284c7;"></div>
+              <span>Air Jernih Outlet</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #78350f;"></div>
+              <span>Endapan Sedimen Dasar</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #64748b;"></div>
+              <span>Sekat / Baffle Beton</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #10b981;"></div>
+              <span>Titik Penaatan Lingkungan</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Technical Engineering Calculation Tables -->
+      <section class="details-grid">
+        
+        <!-- Tabel Hidrolika & Sedimentasi -->
+        <div class="detail-card">
+          <div class="detail-card-title">
+            <span>🔬 Hasil Analisis Sedimentasi & Hidrolika</span>
+          </div>
+          <table class="table-calc">
+            <thead>
+              <tr>
+                <th>Parameter Rekayasa</th>
+                <th style="text-align: right;">Nilai</th>
+                <th style="text-align: left; padding-left: 0.5rem;">Satuan</th>
+                <th>Keterangan / Evaluasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kecepatan Endap Stokes (Vs)</td>
+                <td class="value-col" id="tbl_stokesVs">0.00062</td>
+                <td class="unit-col">m/s</td>
+                <td>Hukum Stokes laminar</td>
+              </tr>
+              <tr>
+                <td>Surface Overflow Rate (v0)</td>
+                <td class="value-col" id="tbl_sor">0.00081</td>
+                <td class="unit-col">m/s</td>
+                <td>Beban hidrolik permukaan (Q/As)</td>
+              </tr>
+              <tr>
+                <td>Luas Permukaan Kritis (As min)</td>
+                <td class="value-col" id="tbl_asMin">1950.4</td>
+                <td class="unit-col">m²</td>
+                <td>Kebutuhan minimum teoritis</td>
+              </tr>
+              <tr>
+                <td>Luas Permukaan Tersedia (As)</td>
+                <td class="value-col" id="tbl_asActual">2250.0</td>
+                <td class="unit-col">m²</td>
+                <td id="tbl_asStatus" style="color: var(--accent-emerald); font-weight: 700;">Memadai (As > As min)</td>
+              </tr>
+              <tr>
+                <td>Waktu Pengendapan Partikel (ts)</td>
+                <td class="value-col" id="tbl_ts">45.2</td>
+                <td class="unit-col">Menit</td>
+                <td>Waktu partikel jatuh ke dasar</td>
+              </tr>
+              <tr>
+                <td>Hydraulic Retention Time (tR)</td>
+                <td class="value-col" id="tbl_tr">111.0</td>
+                <td class="unit-col">Menit</td>
+                <td id="tbl_trRatio" style="color: var(--accent-emerald); font-weight: 700;">tR / ts = 2.46 (Aman)</td>
+              </tr>
+              <tr>
+                <td>Kecepatan Alir Horisontal (Vh)</td>
+                <td class="value-col" id="tbl_vh">0.029</td>
+                <td class="unit-col">m/s</td>
+                <td id="tbl_vhStatus" style="color: var(--accent-emerald);">Aman (< 0.05 m/s anti-scour)</td>
+              </tr>
+              <tr>
+                <td>Bilangan Reynolds (Re)</td>
+                <td class="value-col" id="tbl_re">412</td>
+                <td class="unit-col">-</td>
+                <td id="tbl_reStatus" style="color: var(--accent-emerald);">Aliran Stabil Terkendali</td>
+              </tr>
+              <tr>
+                <td>Bilangan Froude (Fr)</td>
+                <td class="value-col" id="tbl_fr">5.8e-3</td>
+                <td class="unit-col">-</td>
+                <td>Aliran subkritis tenang</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tabel Neraca Massa Sedimen & Rekomendasi Baku Mutu -->
+        <div class="detail-card">
+          <div class="detail-card-title">
+            <span>⚖️ Neraca Sedimen & Kepatuhan Regulasi</span>
+          </div>
+          <table class="table-calc">
+            <thead>
+              <tr>
+                <th>Parameter Neraca Massa</th>
+                <th style="text-align: right;">Nilai</th>
+                <th style="text-align: left; padding-left: 0.5rem;">Satuan</th>
+                <th>Keterangan / Aturan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Laju Padatan Masuk (Solid Influx)</td>
+                <td class="value-col" id="tbl_solidRate">6.37</td>
+                <td class="unit-col">kg/s</td>
+                <td>~550.4 ton padatan / hari</td>
+              </tr>
+              <tr>
+                <td>Efisiensi Pengendapan (Camp-Hazen)</td>
+                <td class="value-col" id="tbl_campEff">94.8</td>
+                <td class="unit-col">%</td>
+                <td>Faktor turbulensi sekat n=4</td>
+              </tr>
+              <tr>
+                <td>TSS Terbuang ke Lingkungan</td>
+                <td class="value-col" id="tbl_tssOutRow">182.0</td>
+                <td class="unit-col">mg/L</td>
+                <td id="tbl_compStatus" style="color: var(--accent-emerald); font-weight: 700;">MEMENUHI BAKU MUTU</td>
+              </tr>
+              <tr>
+                <td>Ambang Batas Baku Mutu Resmi</td>
+                <td class="value-col" id="tbl_tssLimit">200.0</td>
+                <td class="unit-col">mg/L</td>
+                <td>Permen LH 113 / Kepmen 1827</td>
+              </tr>
+              <tr>
+                <td>Volume Ruang Sedimen Kolam</td>
+                <td class="value-col" id="tbl_sedVolume">2700.0</td>
+                <td class="unit-col">m³</td>
+                <td>Kapasitas zona lumpur</td>
+              </tr>
+              <tr>
+                <td>Laju Akumulasi Sedimen Basah</td>
+                <td class="value-col" id="tbl_sedDaily">50.8</td>
+                <td class="unit-col">m³/hari</td>
+                <td>Berdasarkan porositas endapan</td>
+              </tr>
+              <tr>
+                <td>Waktu Pengisian Hingga Pengerukan</td>
+                <td class="value-col" id="tbl_timeToDredge">31.9</td>
+                <td class="unit-col">Hari</td>
+                <td>Pada batas ambang 60%</td>
+              </tr>
+              <tr>
+                <td>Kebutuhan Jam Operasi Excavator</td>
+                <td class="value-col" id="tbl_excavatorHours">36.0</td>
+                <td class="unit-col">Jam</td>
+                <td>Produktivitas 45 m³/jam</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 1rem; padding: 0.75rem; background: var(--rec-box-bg); border-radius: 6px; border-left: 4px solid var(--rec-box-border);">
+            <div style="font-weight: 700; font-size: 0.78rem; color: var(--rec-box-border); margin-bottom: 0.25rem;">Rekomendasi Rekayasa Tambang:</div>
+            <p id="recommendationText" style="font-size: 0.75rem; color: var(--rec-box-text); line-height: 1.4;">
+              Desain kolam telah memadai dan memenuhi baku mutu lingkungan. Disarankan membuat jadwal pengerukan berkala setiap 30 hari pada Kompartemen 1 (zona sedimentasi kasar) untuk menjaga umur pakai dan efisiensi hidrolik kolam.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FLOATING ACTION LAUNCHER PANEL (BOTTOM-RIGHT) -->
+  <!-- ========================================================================= -->
+  <div id="chatBotLauncherPanel" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 850; display: flex; align-items: center; gap: 0.6rem; user-select: none;">
+    
+    <!-- Screensaver Trigger -->
+    <button onclick="turnOnScreensaverMode()" style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-card); border: 2px solid #8b5cf6; color: #a78bfa; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: transform 0.2s;" title="Aktifkan Mode Screensaver (Shortcut: S)">
+      <i class="fa-solid fa-desktop text-sm"></i>
+    </button>
+
+    <!-- Voice Assistant Toggle -->
+    <button onclick="toggleVoiceAssistant()" id="btnVoiceToggle" style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-card); border: 2px solid #0284c7; color: #38bdf8; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: transform 0.2s;" title="On/Off Asisten Suara AI (Text-to-Speech)">
+      <i id="iconVoiceToggle" class="fa-solid fa-volume-high text-sm"></i>
+    </button>
+
+    <!-- Recalculate Trigger -->
+    <button onclick="recalculate()" style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-card); border: 2px solid #10b981; color: #34d399; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: transform 0.2s;" title="Refresh & Hitung Ulang Parameter">
+      <i class="fa-solid fa-arrows-rotate text-sm"></i>
+    </button>
+
+    <!-- AI Chatbot Launcher -->
+    <button onclick="toggleChatWindow()" class="pulse-ring" style="width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #06b6d4, #10b981); border: 2px solid white; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.5); transition: transform 0.2s; position: relative;" title="Buka AI MinePond Copilot (Shortcut: C)">
+      <i class="fa-solid fa-robot text-2xl"></i>
+      <span style="position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ef4444; border: 2px solid white; display: inline-block;"></span>
+    </button>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. CHATBOT COPILOT TERMINAL WINDOW -->
+  <!-- ========================================================================= -->
+  <div id="chatWindow" style="position: fixed; bottom: 5.5rem; right: 1.5rem; width: 420px; max-width: 92vw; height: 580px; max-height: 82vh; background: var(--bg-card); border: 2px solid #0284c7; border-radius: 16px; display: none; flex-direction: column; z-index: 950; overflow: hidden; box-shadow: 0 20px 35px rgba(0,0,0,0.6);">
+    
+    <!-- Chat Header -->
+    <div style="background: linear-gradient(90deg, #0f172a, #032b43, #0f172a); padding: 0.85rem 1rem; border-bottom: 2px solid #0284c7; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <div style="padding: 0.4rem; background: rgba(2, 132, 199, 0.3); border-radius: 8px; border: 1px solid #0284c7;">
+          <i class="fa-solid fa-brain" style="color: #38bdf8; font-size: 1.1rem;"></i>
+        </div>
+        <div>
+          <h4 class="font-tech" style="font-size: 0.85rem; font-weight: 800; color: #38bdf8; letter-spacing: 0.05em; text-transform: uppercase;">MinePond AI Copilot</h4>
+          <span style="font-size: 9px; font-family: monospace; color: #34d399; font-weight: bold; display: block;">● GEMINI KERNEL & WIKIPEDIA SYNCED</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.4rem;">
+        <button onclick="clearChatHistory()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px;" title="Bersihkan Percakapan"><i class="fa-solid fa-trash-can text-xs"></i></button>
+        <button onclick="toggleChatWindow()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px;" title="Tutup Chatbot"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+    </div>
+
+    <!-- Chat Time Bar -->
+    <div style="background: rgba(15, 23, 42, 0.9); padding: 0.35rem 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-family: monospace; font-size: 9px; color: #cbd5e1; flex-shrink: 0;">
+      <span id="chat-top-day">-</span>
+      <span style="color: #34d399;"><i class="fa-brands fa-wikipedia-w" style="margin-right: 3px;"></i>Wiki & Google Synced</span>
+      <span id="chat-top-clock" style="color: #38bdf8; font-weight: bold;">00:00:00 WIB</span>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chatMessages" style="flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8rem; line-height: 1.5; background: var(--bg-primary);">
+      <div class="chat-card-animated" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px solid var(--border-color); max-width: 95%; box-shadow: var(--shadow-card);">
+        <span style="color: #38bdf8; font-family: monospace; font-size: 10px; font-weight: 800; display: block; margin-bottom: 4px;">
+          <i class="fa-solid fa-terminal text-cyan-500"></i> MINEPOND KERNEL READY:
+        </span>
+        Selamat datang di <b>MinePond AI Mining Copilot</b>. Anda dapat bertanya tentang kecepatan pengendapan Hukum Stokes, kalkulasi debit limpasan metode rasional, evaluasi baku mutu TSS air tambang, jadwal pengerukan sedimen, rekomendasi flokulan PAC/Tawas, profil pengembang, atau mencari rujukan teknis ensiklopedia.
+      </div>
+    </div>
+
+    <!-- Shortcut Pills -->
+    <div style="padding: 0.5rem 0.75rem; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; flex-shrink: 0;">
+      <button onclick="triggerChatShortcut('creator')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #ec4899; color: #f472b6;">
+        👨‍💻 Creator Data
+      </button>
+      <button onclick="triggerChatShortcut('my_aplikasi')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #8b5cf6; color: #c084fc;">
+        🚀 My Aplikasi
+      </button>
+      <button onclick="triggerChatShortcut('stokes')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #0284c7; color: #38bdf8;">
+        🌊 Hukum Stokes & Vs
+      </button>
+      <button onclick="triggerChatShortcut('hidrologi')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #f59e0b; color: #fbbf24;">
+        📊 Analisis Hidrologi
+      </button>
+      <button onclick="triggerChatShortcut('baku_mutu')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #10b981; color: #34d399;">
+        ⚖️ Baku Mutu TSS
+      </button>
+      <button onclick="triggerChatShortcut('pengerukan')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #f43f5e; color: #fb7185;">
+        🚜 Jadwal Pengerukan
+      </button>
+      <button onclick="triggerChatShortcut('koagulan')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 9px; border-color: #06b6d4; color: #22d3ee;">
+        🧪 Koagulan PAC & Alum
+      </button>
+    </div>
+
+    <!-- Input Form -->
+    <div style="padding: 0.6rem 0.75rem; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; gap: 0.5rem; flex-shrink: 0; align-items: center;">
+      <button id="micBtn" onclick="startVoiceRecognition()" style="background: var(--bg-input); border: 1px solid var(--border-color); color: #38bdf8; padding: 0.5rem 0.75rem; border-radius: 8px; cursor: pointer;" title="Perintah Suara (Voice Input)">
+        <i class="fa-solid fa-microphone"></i>
+      </button>
+      <input type="text" id="chatInput" onkeydown="if(event.key==='Enter') processChatMessage()" placeholder="Ketik pertanyaan rekayasa atau perintah Anda..." style="flex: 1; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: var(--text-main); font-weight: 600; outline: none;">
+      <button onclick="processChatMessage()" class="btn btn-primary" style="padding: 0.5rem 0.85rem;">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. HELP SYSTEM MODAL (BUKU PANDUAN LENGKAP & REFERENSI REKAYASA) -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="helpModal" onclick="if(event.target===this) closeHelpModal()">
+    <div class="modal-box" style="width: 900px;">
+      <div class="modal-header">
+        <h2 style="display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-book-journal-whills text-emerald-400"></i>
+          <span>Buku Panduan & Referensi Sistem MinePond Studio™ PRO</span>
+        </h2>
+        <button class="btn btn-secondary" onclick="closeHelpModal()">✕</button>
+      </div>
+
+      <div class="modal-body" style="font-family: 'Inter', sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          
+          <!-- Bagian 1: Konsep Dasar -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">
+              1. Konsep Dasar Settling Pond Tambang
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;">
+              Settling pond (kolam pengendapan) adalah struktur rekayasa lingkungan pertambangan vital yang berfungsi mengendapkan partikel padatan tersuspensi (TSS / Total Suspended Solids) dari air limpasan tambang (mine runoff) dan air penirisan pit (pit dewatering) sebelum dialirkan ke badan air umum. Terdiri atas zona pengendapan kasar (inlet), zona sedimentasi intermediet/koagulasi dengan sekat baffle, zona penampung lumpur dasar, serta ambang pelimpah (spillway outlet) sebagai titik penaatan lingkungan resmi.
+            </p>
+          </div>
+
+          <!-- Bagian 2: Hidrologi -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">
+              2. Metodologi Hidrologi: Metode Rasional & Mononobe
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem;">
+              Debit limpasan puncak rencana dihitung menggunakan <b>Metode Rasional</b>:
+            </p>
+            <code style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; display: inline-block; color: var(--accent-amber); font-weight: bold; font-family: monospace;">
+              Q_limpasan = (C · I · A) / 360  [m³/s]  (untuk A dalam Hektar)
+            </code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.5rem;">
+              Intensitas hujan <i>I</i> dihitung dengan rumus <b>Mononobe</b> dari curah hujan rencana harian <i>R24</i> dan waktu konsentrasi <i>tc</i>:
+            </p>
+            <code style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; display: inline-block; color: var(--accent-amber); font-weight: bold; font-family: monospace;">
+              I = (R24 / 24) · (24 / tc)^(2/3)  [mm/jam]
+            </code>
+          </div>
+
+          <!-- Bagian 3: Hukum Stokes -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">
+              3. Sedimentasi Partikel: Hukum Stokes & Pengaruh Flokulasi
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem;">
+              Kecepatan pengendapan gravitasi partikel diskrit dalam rezim aliran laminar dinyatakan dengan <b>Hukum Stokes</b>:
+            </p>
+            <code style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; display: inline-block; color: var(--accent-amber); font-weight: bold; font-family: monospace;">
+              Vs = [g · (ρs - ρw) · d²] / (18 · μ)
+            </code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.5rem;">
+              Di mana <i>g</i> = 9.81 m/s², <i>ρs</i> = densitas padatan (2,600–2,850 kg/m³), <i>ρw</i> = densitas air (1,000 kg/m³), <i>d</i> = diameter butir partikel kritis, dan <i>μ</i> = viskositas dinamik fluida yang bervariasi terhadap temperatur. Penggunaan koagulan (PAC/Tawas) membentuk flok makro yang meningkatkan kecepatan endap efektif 2.5x hingga 10x.
+            </p>
+          </div>
+
+          <!-- Bagian 4: Camp-Hazen & Geometri -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">
+              4. Desain Multi-Kompartemen & Model Efisiensi Camp-Hazen
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem;">
+              Kolam bersekat zig-zag mencegah arus pintas (short-circuiting). Efisiensi sedimentasi dihitung dengan formulasi Camp-Hazen:
+            </p>
+            <code style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; display: inline-block; color: var(--accent-amber); font-weight: bold; font-family: monospace;">
+              η = 1 - [1 + (1/n) · (Vs / v0)]^(-n)
+            </code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.5rem;">
+              Di mana <i>v0 = Qin / As</i> (Surface Loading Rate), dan <i>n</i> adalah koefisien sekat turbulensi. Kriteria kelaikan: rasio panjang/lebar <i>L/W ≥ 3:1</i>, waktu tinggal hidrolik <i>tR ≥ 1.5 ts</i>, dan kecepatan alir horisontal <i>Vh &lt; 0.05 m/s</i> (mencegah resuspensi lumpur).
+            </p>
+          </div>
+
+          <!-- Bagian 5: Regulasi -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">
+              5. Regulasi Lingkungan Pertambangan Indonesia
+            </h3>
+            <ul style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; margin-left: 1.25rem;">
+              <li><b>Kepmen ESDM No. 1827 K/30/MEM/2018</b>: Pedoman Pelaksanaan Kaidah Teknik Pertambangan yang Baik (Good Mining Practice).</li>
+              <li><b>Permen LH No. 113 Tahun 2003</b>: Baku Mutu Air Limbah Usaha dan/atau Kegiatan Penambangan Batubara (Parameter TSS maksimum 300 mg/L, pH 6–9, Fe ≤ 7 mg/L, Mn ≤ 4 mg/L).</li>
+              <li><b>Kepmen LH No. 202 Tahun 2004</b>: Baku Mutu Air Limbah Penambangan Bijih Emas dan Tembaga (TSS max 200 mg/L).</li>
+            </ul>
+          </div>
+
+          <!-- Bagian 6: Keyboard Shortcuts -->
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-heading); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem;">
+              ⌨️ Daftar Pintasan Keyboard (Shortcut Keys)
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; font-size: 0.78rem; font-family: monospace;">
+              <div style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);"><b style="color: #38bdf8;">ESC</b>: Tutup Modal / Screensaver</div>
+              <div style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);"><b style="color: #38bdf8;">T</b>: Ganti Mode Gelap / Terang</div>
+              <div style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);"><b style="color: #38bdf8;">S</b>: Aktifkan Screensaver</div>
+              <div style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);"><b style="color: #38bdf8;">C</b>: Buka / Tutup AI Chatbot</div>
+              <div style="background: var(--bg-input); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color);"><b style="color: #38bdf8;">?</b>: Buka Buku Panduan</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeHelpModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. PROGRAMMER CREDITS MODAL (PROFIL RESMI MOHAMAD HARTADI) -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="creatorModal" onclick="if(event.target===this) closeCreatorModal()">
+    <div class="modal-box" style="width: 500px; max-width: 95vw;">
+      <div class="modal-header" style="border-bottom-color: #ec4899;">
+        <h2 style="color: #f472b6; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-code"></i> Profil Pengembang & Arsitek Sistem
+        </h2>
+        <button class="btn btn-secondary" onclick="closeCreatorModal()">✕</button>
+      </div>
+
+      <div class="modal-body" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        
+        <!-- Avatar with Rotating Neon Glow -->
+        <div class="programmer-avatar" style="width: 80px; height: 80px; border-radius: 20px; background: #0f172a; border: 2px solid #ec4899; box-shadow: 0 0 25px rgba(236, 72, 153, 0.6); margin-top: 0.5rem;">
+          <i class="fa-solid fa-laptop-code text-3xl" style="color: #f472b6;"></i>
+          <div style="position: absolute; top: -3px; right: -3px; width: 14px; height: 14px; border-radius: 50%; background: #10b981; border: 2px solid #0f172a;"></div>
+        </div>
+
+        <div>
+          <span style="font-size: 9px; font-family: monospace; font-weight: 800; color: #f472b6; background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.4); padding: 3px 8px; border-radius: 9999px; text-transform: uppercase;">
+            &lt;/&gt; LEAD DEVELOPER & SYSTEM ARCHITECT
+          </span>
+          <h3 class="font-tech" style="font-size: 1.3rem; font-weight: 900; color: #f472b6; margin-top: 0.5rem; letter-spacing: 0.05em;">
+            MOHAMAD HARTADI
+          </h3>
+          <p style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            Civil, Geotechnical & Mining Environmental Engineering Specialist
+          </p>
+        </div>
+
+        <!-- Official Contacts & Links -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 0.5rem; font-family: monospace; text-align: left;">
+          
+          <!-- WhatsApp Link -->
+          <a href="https://wa.me/6282231036047?text=Halo%20Mohamad%20Hartadi%20MinePond%20Studio" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 10px; color: var(--text-main); text-decoration: none; transition: all 0.2s;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <span style="font-size: 8px; color: var(--text-muted); display: block; font-weight: bold; text-transform: uppercase;">KONTAK WHATSAPP RESMI</span>
+              <span style="font-size: 0.85rem; color: #34d399; font-weight: 800;">082231036047</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs" style="color: #64748b;"></i>
+          </a>
+
+          <!-- Facebook Link -->
+          <a href="https://www.facebook.com/m.hartadi" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; background: var(--bg-card); border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 10px; color: var(--text-main); text-decoration: none; transition: all 0.2s;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(6, 182, 212, 0.2); border: 1px solid #06b6d4; display: flex; align-items: center; justify-content: center; color: #06b6d4; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa-brands fa-facebook"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <span style="font-size: 8px; color: var(--text-muted); display: block; font-weight: bold; text-transform: uppercase;">PROFIL FACEBOOK</span>
+              <span style="font-size: 0.85rem; color: #38bdf8; font-weight: 800;">facebook.com/m.hartadi</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs" style="color: #64748b;"></i>
+          </a>
+
+          <!-- Blog Link -->
+          <a href="https://newbieonline7.blogspot.com/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; background: var(--bg-card); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 10px; color: var(--text-main); text-decoration: none; transition: all 0.2s;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(236, 72, 153, 0.2); border: 1px solid #ec4899; display: flex; align-items: center; justify-content: center; color: #ec4899; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <span style="font-size: 8px; color: var(--text-muted); display: block; font-weight: bold; text-transform: uppercase;">PORTAL BLOG RESMI</span>
+              <span style="font-size: 0.85rem; color: #f472b6; font-weight: 800;">newbieonline7.blogspot.com</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs" style="color: #64748b;"></i>
+          </a>
+
+          <!-- Integrated App Link -->
+          <a href="https://adikds-byte.github.io/Seismic_Site_Report_Pro/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; color: var(--text-main); text-decoration: none; transition: all 0.2s;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa-solid fa-chart-area"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <span style="font-size: 8px; color: var(--text-muted); display: block; font-weight: bold; text-transform: uppercase;">APLIKASI REKAYASA TERINTEGRASI</span>
+              <span style="font-size: 0.85rem; color: #fbbf24; font-weight: 800;">Seismic Site Report Pro (SNI 1726)</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs" style="color: #64748b;"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeCreatorModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 7. TECHNICAL REPORT A4 PRINTABLE MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="modalReport" onclick="if(event.target===this) closeModal('modalReport')">
+    <div class="modal-box" style="width: 950px;">
+      <div class="modal-header">
+        <h2>📄 Laporan Teknis Desain Settling Pond Tambang (Format Siap Cetak A4)</h2>
+        <div>
+          <button class="btn btn-emerald" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+          <button class="btn btn-secondary" onclick="closeModal('modalReport')">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" id="printReportArea" style="background: white; color: #1e293b; padding: 2.5rem; font-family: 'Times New Roman', serif;">
+        
+        <div style="border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 20px; text-align: center;">
+          <h2 style="font-size: 16pt; font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">LAPORAN TEKNIS DESAIN & ANALISIS SETTLING POND</h2>
+          <h3 style="font-size: 12pt; font-weight: normal; color: #475569; margin-bottom: 6px;">Evaluasi Kapasitas Hidrolika, Sedimentasi Partikel, & Baku Mutu Lingkungan Tambang</h3>
+          <p style="font-size: 9pt; color: #64748b;">Dokumen Rekayasa Tambang & Pengelolaan Lingkungan Hidup | Tanggal: <span id="rptDate"></span></p>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 11pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px;">1. DATA UMUM & KRITERIA DESAIN</h4>
+          <table style="width: 100%; font-size: 9pt; border-collapse: collapse; margin-bottom: 12px;">
+            <tr>
+              <td style="width: 30%; padding: 4px; font-weight: bold;">Jenis Penambangan / Profil:</td>
+              <td style="width: 70%; padding: 4px;" id="rptPreset">Tambang Batubara</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">Luas Catchment Area (A):</td>
+              <td style="padding: 4px;" id="rptArea">25.0 Ha</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">Curah Hujan Rencana (R24):</td>
+              <td style="padding: 4px;" id="rptRainfall">120 mm/hari (tc = 0.85 Jam)</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">Total Debit Masuk Desain (Qin):</td>
+              <td style="padding: 4px;" id="rptDebit">1.82 m³/s (Termasuk Pompa Tambang)</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 11pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px;">2. KARAKTERISTIK PARTIKEL & SEDIMENTASI HUKUM STOKES</h4>
+          <table style="width: 100%; font-size: 9pt; border-collapse: collapse; margin-bottom: 12px;">
+            <tr>
+              <td style="width: 30%; padding: 4px; font-weight: bold;">Diameter Partikel Kritis (d):</td>
+              <td style="width: 70%; padding: 4px;" id="rptParticle">0.025 mm (Lanau/Lempung)</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">Densitas Partikel Solid:</td>
+              <td style="padding: 4px;" id="rptDensity">2,650 kg/m³ (Suhu Air: 28°C)</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">Kecepatan Pengendapan Stokes (Vs):</td>
+              <td style="padding: 4px;" id="rptStokes">0.00062 m/s (0.062 cm/s)</td>
+            </tr>
+            <tr>
+              <td style="padding: 4px; font-weight: bold;">TSS Air Limbah Masuk (Inlet):</td>
+              <td style="padding: 4px;" id="rptTssIn">3,500 mg/L</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 11pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px;">3. GEOMETRI KOLAM & KINERJA HIDROLIKA</h4>
+          <table style="width: 100%; font-size: 9pt; border-collapse: collapse; margin-bottom: 12px; border: 1px solid #94a3b8;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="border: 1px solid #94a3b8; padding: 6px; text-align: left;">Parameter Geometri & Aliran</th>
+                <th style="border: 1px solid #94a3b8; padding: 6px; text-align: center;">Nilai Desain</th>
+                <th style="border: 1px solid #94a3b8; padding: 6px; text-align: left;">Evaluasi Kriteria Kelaikan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Dimensi Kolam (L × W × Hair)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center;" id="rptDim">90.0 m × 25.0 m × 2.5 m</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Rasio L/W = 3.6 (Memenuhi syarat ≥ 3:1)</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Jumlah Kompartemen (Sekat)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center;" id="rptCells">4 Sel Bersekat</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Mencegah arus pintas (short-circuiting)</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Luas Permukaan Kolam (As)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center;" id="rptAs">2,250 m²</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px;" id="rptAsEval">Lebih besar dari As min (1,950 m²)</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Waktu Tinggal Hidrolik (HRT)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center;" id="rptHrt">1.85 Jam</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px;" id="rptHrtEval">tR > 1.5 ts (Cukup untuk pengendapan)</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Efisiensi Pengendapan Teoretis (η)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center; font-weight: bold; color: #0284c7;" id="rptEff">94.8 %</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">Model Camp-Hazen dengan sekat multi-sel</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #94a3b8; padding: 5px;">TSS Air Limbah Keluar (Outlet)</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; text-align: center; font-weight: bold; color: #059669;" id="rptTssOut">182 mg/L</td>
+                <td style="border: 1px solid #94a3b8; padding: 5px; font-weight: bold; color: #059669;" id="rptTssStatus">MEMENUHI BAKU MUTU (≤ 200 mg/L)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 11pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px;">4. MANAJEMEN PENGERUKAN & PEMELIHARAAN (MAINTENANCE)</h4>
+          <p style="font-size: 9pt; margin-bottom: 6px;">
+            Kapasitas ruang lumpur adalah sebesar <b><span id="rptSedCap">2,700</span> m³</b>. Dengan laju akumulasi lumpur harian sebesar <b><span id="rptDailySed">50.8</span> m³/hari</b> dan batas ambang pengerukan 60%, maka jadwal pengerukan kolam wajib dilaksanakan setiap <b><span id="rptDredgeDays">32</span> hari sekali</b>.
+          </p>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+          <h4 style="font-size: 11pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 8px;">5. KESIMPULAN & REKOMENDASI ENGINEERING</h4>
+          <p style="font-size: 9pt; line-height: 1.5;" id="rptConclusion">
+            Berdasarkan hasil analisis hidrologi dan sedimentasi Stokes, geometri kolam yang didesain mampu mereduksi TSS dari 3,500 mg/L menjadi 182 mg/L (efisiensi 94.8%), sehingga memenuhi standar baku mutu air limbah penambangan. Rekomendasi operasional: (1) Pasang sekat pengarah aliran (baffle) berbahan pasangan batu atau geotekstil; (2) Lakukan pengerukan berkala sesuai jadwal untuk menjaga volume efektif kolam; (3) Siapkan unit pengumpan flokulan (dosing pump) cadangan saat curah hujan ekstrim.
+          </p>
+        </div>
+
+        <!-- Tanda Tangan Dokumen Teknis -->
+        <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 9pt;">
+          <div style="text-align: center; width: 220px;">
+            <p>Dianalisis Oleh,</p>
+            <p style="font-weight: bold; margin-top: 4px;">Mining & Environmental Engineer</p>
+            <div style="height: 60px;"></div>
+            <p style="border-top: 1px solid #334155; padding-top: 4px;">( Tim Rekayasa Lingkungan Tambang )</p>
+          </div>
+          <div style="text-align: center; width: 220px;">
+            <p>Disetujui Oleh,</p>
+            <p style="font-weight: bold; margin-top: 4px;">Kepala Teknik Tambang (KTT)</p>
+            <div style="height: 60px;"></div>
+            <p style="border-top: 1px solid #334155; padding-top: 4px;">( Penanggung Jawab Operasional )</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modalReport')">Tutup</button>
+        <button class="btn btn-emerald" onclick="window.print()">🖨️ Cetak Dokumen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CALCULATION & INTERACTIVE ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    // State model
+    const state = {
+      // 1. Hydrology
+      catchmentArea: 25.0,    // Ha
+      runoffCoeff: 0.70,      // dimensionless
+      rainfall: 120.0,        // mm/day
+      tc: 0.85,               // hours
+      pumpFlow: 250.0,        // m3/hour
+
+      // 2. Sediment & Fluid
+      particleSize: 0.025,    // mm
+      particleDensity: 2650,  // kg/m3
+      waterTemp: 28,          // deg C
+      tssIn: 3500,            // mg/L
+      tssTarget: 200,         // mg/L
+      flocFactor: 1.0,        // flocculant boost factor
+
+      // 3. Geometry
+      compartments: 4,        // cells
+      pondLength: 90.0,       // m
+      pondWidth: 25.0,        // m
+      waterDepth: 2.50,       // m
+      sedimentDepth: 1.20,    // m
+      freeboard: 0.80,        // m
+      sideSlope: 1.5,         // 1 : m
+
+      // 4. Maintenance
+      sedDryDensity: 1.35,    // ton/m3
+      dredgeThreshold: 60,    // %
+      dredgeProd: 45,         // m3/hour
+
+      // UI View & Theme
+      currentTheme: 'dark',
+      activeView: 'plan',     // 'plan' | 'section' | 'isometric' | 'curves'
+      animating: true,
+      animSpeed: 1.0,
+      isoAngleX: 35,          // deg
+      isoAngleY: 45,          // deg
+      isoZoom: 1.0,
+
+      // Screensaver & Idle Timer
+      idleSeconds: 0,
+      maxIdleLimit: 300,      // 5 minutes
+      isScreensaverActive: false,
+
+      // Voice
+      voiceEnabled: true
+    };
+
+    // Preset configurations
+    const presets = {
+      coal_kalimantan: {
+        catchmentArea: 25.0, runoffCoeff: 0.75, rainfall: 140, tc: 0.85, pumpFlow: 350,
+        particleSize: 0.020, particleDensity: 2600, waterTemp: 29, tssIn: 4500, tssTarget: 200, flocFactor: 1.0,
+        compartments: 4, pondLength: 105, pondWidth: 28, waterDepth: 2.5, sedimentDepth: 1.2, freeboard: 0.8, sideSlope: 1.5,
+        sedDryDensity: 1.30, dredgeThreshold: 60, dredgeProd: 50
+      },
+      nickel_laterite: {
+        catchmentArea: 18.0, runoffCoeff: 0.70, rainfall: 110, tc: 0.70, pumpFlow: 200,
+        particleSize: 0.008, particleDensity: 2850, waterTemp: 28, tssIn: 6000, tssTarget: 200, flocFactor: 5.0,
+        compartments: 5, pondLength: 95, pondWidth: 26, waterDepth: 2.8, sedimentDepth: 1.3, freeboard: 1.0, sideSlope: 1.5,
+        sedDryDensity: 1.45, dredgeThreshold: 50, dredgeProd: 40
+      },
+      gold_mineral: {
+        catchmentArea: 15.0, runoffCoeff: 0.65, rainfall: 95, tc: 0.90, pumpFlow: 180,
+        particleSize: 0.035, particleDensity: 2750, waterTemp: 26, tssIn: 2800, tssTarget: 200, flocFactor: 2.5,
+        compartments: 3, pondLength: 75, pondWidth: 22, waterDepth: 2.3, sedimentDepth: 1.0, freeboard: 0.8, sideSlope: 1.0,
+        sedDryDensity: 1.40, dredgeThreshold: 65, dredgeProd: 45
+      },
+      quarry_sand: {
+        catchmentArea: 10.0, runoffCoeff: 0.80, rainfall: 85, tc: 0.50, pumpFlow: 100,
+        particleSize: 0.050, particleDensity: 2650, waterTemp: 27, tssIn: 2000, tssTarget: 200, flocFactor: 1.0,
+        compartments: 3, pondLength: 60, pondWidth: 18, waterDepth: 2.0, sedimentDepth: 0.8, freeboard: 0.6, sideSlope: 1.0,
+        sedDryDensity: 1.50, dredgeThreshold: 70, dredgeProd: 60
+      }
+    };
+
+    // Wisdom quotes
+    const wisdomQuotes = [
+      { text: "Kaidah teknik pertambangan yang baik adalah kunci menjaga harmoni antara eksploitasi mineral dan kelestarian ekosistem perairan.", author: "Prinsip Good Mining Practice" },
+      { text: "Pengendapan partikel yang terencana mencegah sedimentasi masif di sungai dan melindungi biota perairan alami.", author: "Standar Pengelolaan Lingkungan ESDM" },
+      { text: "Kedisiplinan dalam pemeliharaan dan pengerukan kolam menentukan keandalan operasional tambang berkelanjutan.", author: "Dedikasi Rekayasa Lingkungan Tambang" },
+      { text: "Hukum alam tidak pernah berubah; tugas rekayasa adalah memanfaatkannya dengan bijaksana untuk keselamatan bersama.", author: "Filosofi Rekayasa Fluida" }
+    ];
+    let currentQuoteIdx = 0;
+
+    function rotateWisdomQuote() {
+      currentQuoteIdx = (currentQuoteIdx + 1) % wisdomQuotes.length;
+      const q = wisdomQuotes[currentQuoteIdx];
+      const txt = document.getElementById('scWisdomQuoteText');
+      const auth = document.getElementById('scWisdomQuoteAuthor');
+      if (txt) txt.innerText = `"${q.text}"`;
+      if (auth) auth.innerText = `— ${q.author}`;
+    }
+    setInterval(rotateWisdomQuote, 6000);
+
+    // ==========================================
+    // 1. BOOT / LOADING SCREEN HANDLER
+    // ==========================================
+    let isAppBooted = false;
+    function dismissLoadingScreen() {
+      if (isAppBooted) return;
+      isAppBooted = true;
+      const el = document.getElementById('systemLoadingScreen');
+      if (el) {
+        el.style.opacity = '0';
+        setTimeout(() => {
+          el.style.display = 'none';
+        }, 700);
+      }
+    }
+
+    // Mini animation on loading canvas
+    function drawBootCanvas() {
+      const cvs = document.getElementById('bootCanvas');
+      if (!cvs) return;
+      const c = cvs.getContext('2d');
+      let t = 0;
+      function loop() {
+        if (isAppBooted) return;
+        t += 0.05;
+        c.clearRect(0, 0, 180, 180);
+        // Water waves
+        c.fillStyle = 'rgba(2, 132, 199, 0.4)';
+        c.beginPath();
+        c.arc(90, 90, 80, 0, Math.PI * 2);
+        c.fill();
+
+        // Ripples
+        c.strokeStyle = '#38bdf8';
+        c.lineWidth = 2;
+        for (let i = 0; i < 4; i++) {
+          const r = ((t * 20 + i * 25) % 75);
+          c.beginPath();
+          c.arc(90, 90, r, 0, Math.PI * 2);
+          c.globalAlpha = Math.max(0, 1 - r / 75);
+          c.stroke();
+        }
+        c.globalAlpha = 1.0;
+
+        // Settling particles
+        c.fillStyle = '#f59e0b';
+        for (let j = 0; j < 12; j++) {
+          const px = 90 + Math.cos(j * 0.8 + t) * (30 + j * 3);
+          const py = 90 + Math.sin(j * 0.8 + t * 0.5) * (20 + j * 2) + Math.sin(t + j) * 10;
+          c.beginPath();
+          c.arc(px, py, 2.5, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // ==========================================
+    // 2. SCREENSAVER ENGINE
+    // ==========================================
+    function turnOnScreensaverMode() {
+      state.isScreensaverActive = true;
+      const el = document.getElementById('minePondScreensaver');
+      el.style.display = 'flex';
+      setTimeout(() => { el.style.opacity = '1'; }, 30);
+    }
+
+    function turnOffScreensaverMode() {
+      state.isScreensaverActive = false;
+      state.idleSeconds = 0;
+      const el = document.getElementById('minePondScreensaver');
+      el.style.opacity = '0';
+      setTimeout(() => { el.style.display = 'none'; }, 500);
+    }
+
+    function resetIdle() {
+      state.idleSeconds = 0;
+      if (state.isScreensaverActive) {
+        turnOffScreensaverMode();
+      }
+    }
+
+    // User idle tracker
+    ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, resetIdle);
+    });
+
+    // Realtime Clock Engine
+    function updateClockDisplays() {
+      const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+      const now = new Date();
+      const dayStr = `${days[now.getDay()]}, ${now.getDate().toString().padStart(2, '0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+      const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+      // Loading screen clock
+      const ldDate = document.getElementById('load-date-display');
+      const ldTime = document.getElementById('load-time-display');
+      if (ldDate) ldDate.innerText = dayStr;
+      if (ldTime) ldTime.innerText = `${timeStr} WIB`;
+
+      // Screensaver clock
+      const scClock = document.getElementById('scClockDisplay');
+      const scDate = document.getElementById('scDateDisplay');
+      if (scClock) scClock.innerText = timeStr;
+      if (scDate) scDate.innerText = dayStr.toUpperCase();
+
+      // Chatbot clock
+      const chDay = document.getElementById('chat-top-day');
+      const chTime = document.getElementById('chat-top-clock');
+      if (chDay) chDay.innerText = dayStr.toUpperCase();
+      if (chTime) chTime.innerText = `${timeStr} WIB`;
+
+      // Idle timer check
+      state.idleSeconds++;
+      if (state.idleSeconds >= state.maxIdleLimit && !state.isScreensaverActive) {
+        turnOnScreensaverMode();
+      }
+    }
+
+    // ==========================================
+    // 3. THEME MANAGEMENT (DARK / LIGHT)
+    // ==========================================
+    function toggleTheme() {
+      const nextTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme);
+    }
+
+    function setTheme(theme) {
+      state.currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      try {
+        localStorage.setItem('minepond_theme', theme);
+      } catch (e) {}
+
+      const icon = document.getElementById('themeIcon');
+      const lbl = document.getElementById('lblTheme');
+      if (theme === 'dark') {
+        if (icon) icon.innerText = '☀️';
+        if (lbl) lbl.innerText = 'Mode Terang';
+      } else {
+        if (icon) icon.innerText = '🌙';
+        if (lbl) lbl.innerText = 'Mode Gelap';
+      }
+
+      renderActiveView();
+    }
+
+    function loadPreset(key) {
+      if (key === 'custom') return;
+      const p = presets[key];
+      if (!p) return;
+      Object.assign(state, p);
+      refreshInputUI();
+      recalculate();
+    }
+
+    function refreshInputUI() {
+      for (const key in state) {
+        const rng = document.getElementById(`rng_${key}`);
+        const num = document.getElementById(`num_${key}`);
+        const sel = document.getElementById(`sel_${key}`);
+        const val = document.getElementById(`val_${key}`);
+
+        if (rng) rng.value = state[key];
+        if (num) num.value = state[key];
+        if (sel) sel.value = state[key];
+
+        if (val) {
+          if (key === 'catchmentArea') val.innerText = `${state[key]} Ha`;
+          else if (key === 'runoffCoeff') val.innerText = state[key].toFixed(2);
+          else if (key === 'rainfall') val.innerText = `${state[key]} mm`;
+          else if (key === 'tc') val.innerText = `${state[key]} Jam`;
+          else if (key === 'pumpFlow') val.innerText = `${state[key]} m³/jam`;
+          else if (key === 'particleSize') val.innerText = `${state[key]} mm`;
+          else if (key === 'particleDensity') val.innerText = `${state[key]} kg/m³`;
+          else if (key === 'waterTemp') val.innerText = `${state[key]} °C`;
+          else if (key === 'tssIn') val.innerText = `${state[key]} mg/L`;
+          else if (key === 'tssTarget') val.innerText = `${state[key]} mg/L`;
+          else if (key === 'compartments') val.innerText = `${state[key]} Kompartemen`;
+          else if (key === 'pondLength') val.innerText = `${state[key]} m`;
+          else if (key === 'pondWidth') val.innerText = `${state[key]} m`;
+          else if (key === 'waterDepth') val.innerText = `${Number(state[key]).toFixed(2)} m`;
+          else if (key === 'sedimentDepth') val.innerText = `${Number(state[key]).toFixed(2)} m`;
+          else if (key === 'freeboard') val.innerText = `${Number(state[key]).toFixed(2)} m`;
+          else if (key === 'sedDryDensity') val.innerText = `${state[key]} t/m³`;
+          else if (key === 'dredgeThreshold') val.innerText = `${state[key]} %`;
+          else if (key === 'dredgeProd') val.innerText = `${state[key]} m³/jam`;
+        }
+      }
+
+      const ratio = (state.pondLength / state.pondWidth).toFixed(1);
+      const ratioElem = document.getElementById('lbl_lwRatio');
+      if (ratioElem) {
+        ratioElem.innerText = `${ratio}:1`;
+        ratioElem.style.color = (ratio >= 3.0) ? 'var(--accent-blue)' : 'var(--accent-rose)';
+      }
+    }
+
+    function syncParam(key, val) {
+      state[key] = parseFloat(val);
+      refreshInputUI();
+      recalculate();
+    }
+
+    function switchInputTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.style.display = 'none');
+
+      event.target.classList.add('active');
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.style.display = 'block';
+    }
+
+    // ==========================================
+    // 4. ENGINEERING CALCULATION ENGINE
+    // ==========================================
+    let calcResults = {};
+
+    function calculateEngineering() {
+      const T = state.waterTemp;
+      const rho_w = 1000 - 0.017 * Math.pow(T - 4, 2) / 2;
+      const mu = (1.787 / (1 + 0.0337 * T + 0.000221 * T * T)) * 1e-3;
+
+      const d_meter = state.particleSize * 1e-3;
+      const g = 9.81;
+      const Vs_base = (g * (state.particleDensity - rho_w) * Math.pow(d_meter, 2)) / (18 * mu);
+      const Vs = Vs_base * state.flocFactor;
+
+      const tc_clamped = Math.max(0.1, state.tc);
+      const I_mm_hr = (state.rainfall / 24.0) * Math.pow(24.0 / tc_clamped, 2.0 / 3.0);
+      
+      const Q_runoff = (state.runoffCoeff * I_mm_hr * state.catchmentArea) / 360.0;
+      const Q_pump_m3_s = state.pumpFlow / 3600.0;
+      const Qin_total = Q_runoff + Q_pump_m3_s;
+
+      const As = state.pondLength * state.pondWidth;
+      const V_water = As * state.waterDepth;
+      const V_sediment = As * state.sedimentDepth;
+      const V_total = As * (state.waterDepth + state.sedimentDepth + state.freeboard);
+
+      const v0 = Qin_total / As;
+      const As_min = Qin_total / Vs;
+
+      const ts_sec = state.waterDepth / Vs;
+      const ts_min = ts_sec / 60.0;
+      const HRT_sec = V_water / Qin_total;
+      const HRT_hr = HRT_sec / 3600.0;
+      const HRT_min = HRT_sec / 60.0;
+      const tr_ts_ratio = HRT_sec / ts_sec;
+
+      const Vh = Qin_total / (state.pondWidth * state.waterDepth);
+      const Rh = (state.pondWidth * state.waterDepth) / (state.pondWidth + 2 * state.waterDepth);
+      const nu = mu / rho_w;
+      const Re = (Vh * Rh) / nu;
+      const Fr = Vh / Math.sqrt(g * state.waterDepth);
+
+      const n_turb = Math.min(8, 1 + state.compartments);
+      const ratio_v = Vs / Math.max(1e-6, v0);
+      let eta_fraction = 1.0 - Math.pow(1.0 + (1.0 / n_turb) * ratio_v, -n_turb);
+      eta_fraction = Math.max(0.05, Math.min(0.999, eta_fraction));
+      const eta_percent = eta_fraction * 100.0;
+
+      const tss_out = state.tssIn * (1.0 - eta_fraction);
+      const isCompliant = tss_out <= state.tssTarget;
+
+      const mass_influx_kg_s = Qin_total * (state.tssIn - tss_out) * 1e-3;
+      const mass_influx_day_ton = (mass_influx_kg_s * 86400) / 1000.0;
+      const sed_volume_day = mass_influx_day_ton / state.sedDryDensity;
+      const sed_trigger_volume = V_sediment * (state.dredgeThreshold / 100.0);
+      const days_to_dredge = sed_volume_day > 0 ? (sed_trigger_volume / sed_volume_day) : 999;
+      const excavator_hours = sed_trigger_volume / state.dredgeProd;
+
+      calcResults = {
+        rho_w, mu, Vs_base, Vs,
+        I_mm_hr, Q_runoff, Q_pump_m3_s, Qin_total,
+        As, V_water, V_sediment, V_total,
+        v0, As_min, ts_sec, ts_min, HRT_sec, HRT_hr, HRT_min, tr_ts_ratio,
+        Vh, Rh, Re, Fr, n_turb,
+        eta_fraction, eta_percent, tss_out, isCompliant,
+        mass_influx_day_ton, sed_volume_day, sed_trigger_volume,
+        days_to_dredge, excavator_hours
+      };
+    }
+
+    function recalculate() {
+      calculateEngineering();
+      updateDashboardUI();
+      renderActiveView();
+    }
+
+    function updateDashboardUI() {
+      const r = calcResults;
+
+      document.getElementById('kpi_efficiency').innerText = r.eta_percent.toFixed(1);
+      const badgeEff = document.getElementById('kpi_badge_eff');
+      if (r.eta_percent >= 90) {
+        badgeEff.className = 'kpi-status-badge badge-success';
+        badgeEff.innerText = 'Sangat Tinggi (≥90%)';
+      } else if (r.eta_percent >= 75) {
+        badgeEff.className = 'kpi-status-badge badge-warning';
+        badgeEff.innerText = 'Cukup Efektif (75–90%)';
+      } else {
+        badgeEff.className = 'kpi-status-badge badge-danger';
+        badgeEff.innerText = 'Kurang Efektif (<75%)';
+      }
+
+      document.getElementById('kpi_tssOut').innerText = Math.round(r.tss_out);
+      const badgeTss = document.getElementById('kpi_badge_tss');
+      const cardTss = document.getElementById('kpiCard_tss');
+      if (r.isCompliant) {
+        badgeTss.className = 'kpi-status-badge badge-success';
+        badgeTss.innerText = `MEMENUHI (≤ ${state.tssTarget} mg/L)`;
+        cardTss.className = 'kpi-card success';
+      } else {
+        badgeTss.className = 'kpi-status-badge badge-danger';
+        badgeTss.innerText = `MELEBIHI BAKU MUTU (> ${state.tssTarget} mg/L)`;
+        cardTss.className = 'kpi-card danger';
+      }
+
+      document.getElementById('kpi_debitTotal').innerText = r.Qin_total.toFixed(2);
+      document.getElementById('kpi_flowSub').innerText = `${(r.Q_runoff).toFixed(2)} m³/s (Hujan) + ${(r.Q_pump_m3_s).toFixed(2)} m³/s (Pompa)`;
+
+      document.getElementById('kpi_hrt').innerText = r.HRT_hr.toFixed(2);
+      const badgeHrt = document.getElementById('kpi_badge_hrt');
+      badgeHrt.innerText = `tR/ts = ${r.tr_ts_ratio.toFixed(1)}x (${r.tr_ts_ratio >= 1.5 ? 'Aman' : 'Kritis'})`;
+      badgeHrt.className = r.tr_ts_ratio >= 1.5 ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-warning';
+
+      document.getElementById('kpi_dredgeDays').innerText = Math.round(r.days_to_dredge);
+      const badgeDredge = document.getElementById('kpi_badge_dredge');
+      if (r.days_to_dredge <= 14) {
+        badgeDredge.className = 'kpi-status-badge badge-danger';
+        badgeDredge.innerText = 'Pengerukan Intensif (≤ 2 Minggu)';
+      } else if (r.days_to_dredge <= 45) {
+        badgeDredge.className = 'kpi-status-badge badge-warning';
+        badgeDredge.innerText = `Pengerukan ~ ${(r.days_to_dredge / 30).toFixed(1)} Bulan Sekali`;
+      } else {
+        badgeDredge.className = 'kpi-status-badge badge-success';
+        badgeDredge.innerText = `Kapasitas Panjang (~ ${(r.days_to_dredge / 30).toFixed(1)} Bulan)`;
+      }
+
+      document.getElementById('tbl_stokesVs').innerText = (r.Vs).toFixed(5);
+      document.getElementById('tbl_sor').innerText = (r.v0).toFixed(5);
+      document.getElementById('tbl_asMin').innerText = r.As_min.toFixed(1);
+      document.getElementById('tbl_asActual').innerText = r.As.toFixed(1);
+      const asStat = document.getElementById('tbl_asStatus');
+      if (r.As >= r.As_min) {
+        asStat.style.color = 'var(--accent-emerald)';
+        asStat.innerText = `Memadai (As > As min: +${Math.round(r.As - r.As_min)} m²)`;
+      } else {
+        asStat.style.color = 'var(--accent-rose)';
+        asStat.innerText = `Kurang Luas (Perlu +${Math.round(r.As_min - r.As)} m²)`;
+      }
+
+      document.getElementById('tbl_ts').innerText = r.ts_min.toFixed(1);
+      document.getElementById('tbl_tr').innerText = r.HRT_min.toFixed(1);
+      const trRatio = document.getElementById('tbl_trRatio');
+      trRatio.innerText = `tR / ts = ${r.tr_ts_ratio.toFixed(2)} (${r.tr_ts_ratio >= 1.5 ? 'Memadai' : 'Kurang Memadai'})`;
+      trRatio.style.color = r.tr_ts_ratio >= 1.5 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+
+      document.getElementById('tbl_vh').innerText = r.Vh.toFixed(3);
+      const vhStat = document.getElementById('tbl_vhStatus');
+      if (r.Vh < 0.05) {
+        vhStat.style.color = 'var(--accent-emerald)';
+        vhStat.innerText = 'Aman (< 0.05 m/s, no scouring)';
+      } else {
+        vhStat.style.color = 'var(--accent-rose)';
+        vhStat.innerText = 'Waspada Resuspensi (> 0.05 m/s)';
+      }
+
+      document.getElementById('tbl_re').innerText = Math.round(r.Re);
+      const reStat = document.getElementById('tbl_reStatus');
+      reStat.innerText = r.Re < 2000 ? 'Aliran Subkritis Tenang' : 'Turbulensi Moderat';
+
+      document.getElementById('tbl_fr').innerText = r.Fr.toExponential(2);
+
+      document.getElementById('tbl_solidRate').innerText = (r.Qin_total * state.tssIn * 1e-3).toFixed(2);
+      document.getElementById('tbl_campEff').innerText = r.eta_percent.toFixed(1);
+      document.getElementById('tbl_tssOutRow').innerText = r.tss_out.toFixed(1);
+      document.getElementById('tbl_tssLimit').innerText = state.tssTarget.toFixed(1);
+      const compStat = document.getElementById('tbl_compStatus');
+      if (r.isCompliant) {
+        compStat.style.color = 'var(--accent-emerald)';
+        compStat.innerText = 'MEMENUHI BAKU MUTU';
+      } else {
+        compStat.style.color = 'var(--accent-rose)';
+        compStat.innerText = 'TIDAK MEMENUHI BAKU MUTU';
+      }
+
+      document.getElementById('tbl_sedVolume').innerText = r.V_sediment.toFixed(0);
+      document.getElementById('tbl_sedDaily').innerText = r.sed_volume_day.toFixed(1);
+      document.getElementById('tbl_timeToDredge').innerText = r.days_to_dredge.toFixed(1);
+      document.getElementById('tbl_excavatorHours').innerText = r.excavator_hours.toFixed(1);
+
+      const rec = document.getElementById('recommendationText');
+      if (r.isCompliant && r.tr_ts_ratio >= 1.5 && r.Vh < 0.05) {
+        rec.innerHTML = `<strong>Kondisi Ideal:</strong> Geometri kolam (${state.pondLength}m × ${state.pondWidth}m dengan ${state.compartments} kompartemen) bekerja sangat optimal dengan efisiensi ${r.eta_percent.toFixed(1)}%. Baku mutu TSS terpenuhi (${Math.round(r.tss_out)} mg/L ≤ ${state.tssTarget} mg/L). Lakukan pengerukan terjadwal setiap <strong>${Math.round(r.days_to_dredge)} hari</strong> pada Kompartemen 1 untuk mencegah pengendapan berlebih.`;
+      } else if (!r.isCompliant) {
+        rec.innerHTML = `<strong style="color: var(--accent-rose);">Peringatan Non-Kepatuhan:</strong> TSS outlet terprediksi (${Math.round(r.tss_out)} mg/L) melampaui baku mutu ${state.tssTarget} mg/L. Tindakan korektif: <em>(1) Tambahkan zat koagulan/flokulan (misal PAC) pada kompartemen 2</em>; <em>(2) Tambahkan panjang kolam menjadi minimal ${Math.ceil(r.As_min / state.pondWidth)} meter</em>; atau <em>(3) Tambah jumlah kompartemen/sekat baffle menjadi 5-6 sel</em>.`;
+      } else {
+        rec.innerHTML = `<strong>Kondisi Cukup:</strong> TSS memenuhi baku mutu, namun rasio retensi atau kecepatan alir berada di batas toleransi. Disarankan memperpanjang sekat baffle zigzag atau menambah tinggi jagaan freeboard untuk mengantisipasi curah hujan ekstrim.`;
+      }
+    }
+
+    function autoOptimizePond() {
+      const r = calcResults;
+      const required_eta = 1.0 - (state.tssTarget / state.tssIn);
+      const n = 1 + state.compartments;
+      const term = Math.pow(1.0 - required_eta, -1.0 / n);
+      const required_ratio = n * (term - 1.0);
+      const required_v0 = r.Vs / required_ratio;
+      const target_As = (r.Qin_total / required_v0) * 1.25;
+
+      const optimal_W = Math.max(15, Math.round(Math.sqrt(target_As / 3.5)));
+      const optimal_L = Math.max(50, Math.round(target_As / optimal_W));
+
+      state.pondLength = optimal_L;
+      state.pondWidth = optimal_W;
+      if (state.flocFactor === 1.0 && state.particleSize < 0.015) {
+        state.flocFactor = 2.5;
+      }
+
+      refreshInputUI();
+      recalculate();
+
+      alert(`⚡ Desain Telah Dioptimasi!\n\nPanjang Kolam: ${optimal_L} m\nLebar Kolam: ${optimal_W} m\nLuas Permukaan: ${(optimal_L * optimal_W).toLocaleString()} m²\nEfisiensi Baru: ${calcResults.eta_percent.toFixed(1)}%\nTSS Keluar: ${Math.round(calcResults.tss_out)} mg/L (Memenuhi Baku Mutu)`);
+    }
+
+    // ==========================================
+    // 5. CANVAS VISUALIZERS (2D PLAN, PROFILE, 3D ISO, CURVES)
+    // ==========================================
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    let animationFrameId = null;
+    let animTicks = 0;
+
+    let particles = [];
+    const MAX_PARTICLES = 160;
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        particles.push({
+          x: Math.random(),
+          y: Math.random(),
+          speed: 0.001 + Math.random() * 0.002,
+          size: 1.5 + Math.random() * 2.5
+        });
+      }
+    }
+    initParticles();
+
+    function switchVisualView(viewName) {
+      state.activeView = viewName;
+      document.querySelectorAll('.view-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = {
+        'plan': 'btnViewPlan',
+        'section': 'btnViewSection',
+        'isometric': 'btnViewIso',
+        'curves': 'btnViewCurves'
+      }[viewName];
+      if (activeBtn) document.getElementById(activeBtn).classList.add('active');
+
+      const ctrlOverlay = document.getElementById('canvasControlsOverlay');
+      const legend = document.getElementById('canvasLegend');
+
+      if (viewName === 'curves') {
+        ctrlOverlay.style.display = 'none';
+        legend.style.display = 'none';
+      } else {
+        ctrlOverlay.style.display = 'flex';
+        legend.style.display = 'flex';
+      }
+
+      renderActiveView();
+    }
+
+    function toggleAnimation(val) {
+      state.animating = val;
+      if (val && !animationFrameId) {
+        animateLoop();
+      }
+    }
+
+    function setAnimSpeed(val) {
+      state.animSpeed = parseFloat(val);
+    }
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+    }
+
+    function animateLoop() {
+      if (state.animating) {
+        animTicks += state.animSpeed;
+        renderActiveView();
+        animationFrameId = requestAnimationFrame(animateLoop);
+      } else {
+        animationFrameId = null;
+      }
+    }
+
+    function renderActiveView() {
+      resizeCanvas();
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+      const isLight = state.currentTheme === 'light';
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.activeView === 'plan') {
+        renderPlanView(w, h, isLight);
+      } else if (state.activeView === 'section') {
+        renderSectionView(w, h, isLight);
+      } else if (state.activeView === 'isometric') {
+        renderIsometricView(w, h, isLight);
+      } else if (state.activeView === 'curves') {
+        renderCurvesView(w, h, isLight);
+      }
+    }
+
+    // 1. Plan View (Tampak Atas)
+    function renderPlanView(w, h, isLight) {
+      const margin = 60;
+      const drawW = w - margin * 2;
+      const drawH = h - margin * 2;
+
+      const pondRatio = state.pondLength / state.pondWidth;
+      let pW = drawW;
+      let pH = pW / pondRatio;
+      if (pH > drawH * 0.75) {
+        pH = drawH * 0.75;
+        pW = pH * pondRatio;
+      }
+
+      const startX = (w - pW) / 2;
+      const startY = (h - pH) / 2;
+
+      ctx.fillStyle = isLight ? '#cbd5e1' : '#1c1917';
+      ctx.fillRect(startX - 30, startY - 30, pW + 60, pH + 60);
+
+      ctx.strokeStyle = isLight ? '#94a3b8' : '#44403c';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(startX - 20, startY - 20, pW + 40, pH + 40);
+
+      ctx.strokeStyle = isLight ? '#94a3b8' : '#292524';
+      for (let x = startX - 20; x <= startX + pW + 20; x += 15) {
+        ctx.beginPath();
+        ctx.moveTo(x, startY - 20);
+        ctx.lineTo(x + 5, startY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, startY + pH + 20);
+        ctx.lineTo(x + 5, startY + pH);
+        ctx.stroke();
+      }
+
+      const waterGrad = ctx.createLinearGradient(startX, startY, startX + pW, startY);
+      waterGrad.addColorStop(0, '#92400e');
+      waterGrad.addColorStop(0.35, '#b45309');
+      waterGrad.addColorStop(0.7, '#0284c7');
+      waterGrad.addColorStop(1, '#0ea5e9');
+      ctx.fillStyle = waterGrad;
+      ctx.fillRect(startX, startY, pW, pH);
+
+      const numCells = state.compartments;
+      const cellW = pW / numCells;
+      ctx.fillStyle = isLight ? '#64748b' : '#475569';
+      ctx.strokeStyle = isLight ? '#334155' : '#1e293b';
+      ctx.lineWidth = 2;
+
+      for (let i = 1; i < numCells; i++) {
+        const bx = startX + i * cellW;
+        const gapH = pH * 0.28;
+        if (i % 2 === 1) {
+          ctx.fillRect(bx - 3, startY, 6, pH - gapH);
+          ctx.strokeRect(bx - 3, startY, 6, pH - gapH);
+          drawArrow(ctx, bx + 18, startY + pH - gapH / 2, 0, 16, '#0284c7');
+        } else {
+          ctx.fillRect(bx - 3, startY + gapH, 6, pH - gapH);
+          ctx.strokeRect(bx - 3, startY + gapH, 6, pH - gapH);
+          drawArrow(ctx, bx + 18, startY + gapH / 2, 0, 16, '#0284c7');
+        }
+
+        ctx.fillStyle = isLight ? 'rgba(15, 23, 42, 0.7)' : 'rgba(255, 255, 255, 0.6)';
+        ctx.font = 'bold 10px monospace';
+        ctx.fillText(`KOMPARTEMEN ${i}`, startX + (i - 1) * cellW + cellW * 0.15, startY + 18);
+      }
+      ctx.fillText(`KOMPARTEMEN ${numCells} (POLISHING)`, startX + (numCells - 1) * cellW + 10, startY + 18);
+
+      // Inflow Channel
+      ctx.fillStyle = '#92400e';
+      ctx.fillRect(startX - 45, startY + pH * 0.35, 45, pH * 0.3);
+      drawArrow(ctx, startX - 35, startY + pH * 0.5, 20, 0, '#f59e0b');
+
+      ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('INLET AIR TAMBANG', startX - 55, startY + pH * 0.28);
+      ctx.font = 'bold 10px monospace';
+      ctx.fillStyle = '#b45309';
+      ctx.fillText(`Qin = ${calcResults.Qin_total.toFixed(2)} m³/s`, startX - 55, startY + pH * 0.72);
+      ctx.fillText(`TSS = ${state.tssIn} mg/L`, startX - 55, startY + pH * 0.82);
+
+      // Outflow Spillway & Monitoring Point
+      const outY = (numCells % 2 === 1) ? (startY + pH * 0.2) : (startY + pH * 0.6);
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(startX + pW, outY, 45, pH * 0.25);
+      drawArrow(ctx, startX + pW + 10, outY + pH * 0.125, 20, 0, '#0284c7');
+
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(startX + pW + 30, outY + pH * 0.125, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('TITIK PENAATAN (OUTLET)', startX + pW + 5, outY - 12);
+      ctx.font = 'bold 10px monospace';
+      ctx.fillStyle = '#0284c7';
+      ctx.fillText(`TSS: ${Math.round(calcResults.tss_out)} mg/L`, startX + pW + 5, outY + pH * 0.25 + 16);
+      ctx.fillText(`Baku Mutu: ${state.tssTarget} mg/L`, startX + pW + 5, outY + pH * 0.25 + 28);
+
+      // Animated Particles
+      if (state.animating) {
+        particles.forEach(p => {
+          p.x += p.speed * state.animSpeed;
+          if (p.x > 1.0) {
+            p.x = 0;
+            p.y = 0.35 + Math.random() * 0.3;
+          }
+
+          const posX = startX + p.x * pW;
+          let posY = startY + p.y * pH;
+
+          let pColor = '#f59e0b';
+          let pAlpha = 1.0 - p.x * 0.85;
+          if (p.x > 0.6) pColor = '#0284c7';
+
+          ctx.fillStyle = pColor;
+          ctx.globalAlpha = Math.max(0.15, pAlpha);
+          ctx.beginPath();
+          ctx.arc(posX, posY, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1.0;
+        });
+      }
+
+      ctx.strokeStyle = isLight ? '#475569' : '#94a3b8';
+      ctx.lineWidth = 1;
+      drawDimensionLine(ctx, startX, startY + pH + 35, startX + pW, startY + pH + 35, `Panjang Kolam Total (L) = ${state.pondLength} m`, isLight);
+      drawDimensionLine(ctx, startX - 15, startY + pH, startX - 15, startY, `Lebar (W) = ${state.pondWidth} m`, isLight);
+
+      ctx.fillStyle = isLight ? '#0369a1' : '#38bdf8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`TAMPAK ATAS (PLAN VIEW) — ${state.compartments} KOMPARTEMEN BERSEKAT ZIG-ZAG`, startX, startY - 12);
+    }
+
+    // 2. Cross Section Profile (Potongan Memanjang A-A')
+    function renderSectionView(w, h, isLight) {
+      const margin = 70;
+      const drawW = w - margin * 2;
+      const drawH = h - margin * 2;
+
+      const totalH = state.freeboard + state.waterDepth + state.sedimentDepth;
+      const scaleX = drawW / state.pondLength;
+      const scaleY = (drawH * 0.65) / totalH;
+
+      const originX = margin;
+      const groundY = margin + 40;
+
+      const freeboardH = state.freeboard * scaleY;
+      const waterH = state.waterDepth * scaleY;
+      const sedimentH = state.sedimentDepth * scaleY;
+
+      const waterLevelY = groundY + freeboardH;
+      const sedimentBedY = waterLevelY + waterH;
+      const pondBottomY = sedimentBedY + sedimentH;
+
+      ctx.fillStyle = isLight ? '#e2e8f0' : '#1c1917';
+      ctx.fillRect(0, 0, w, h);
+
+      const slopeW = state.sideSlope * (totalH * scaleY);
+      const poolStartX = originX + slopeW;
+      const poolEndX = originX + drawW - slopeW;
+
+      ctx.fillStyle = isLight ? '#cbd5e1' : '#292524';
+      ctx.beginPath();
+      ctx.moveTo(originX, groundY);
+      ctx.lineTo(poolStartX, pondBottomY);
+      ctx.lineTo(poolEndX, pondBottomY);
+      ctx.lineTo(originX + drawW, groundY);
+      ctx.lineTo(originX + drawW, h);
+      ctx.lineTo(originX, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // Sediment Zone
+      ctx.fillStyle = '#78350f';
+      ctx.beginPath();
+      ctx.moveTo(poolStartX, pondBottomY);
+      ctx.lineTo(poolStartX, sedimentBedY - 15);
+      ctx.lineTo(poolEndX, sedimentBedY + 10);
+      ctx.lineTo(poolEndX, pondBottomY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Water Volume
+      const waterGrad = ctx.createLinearGradient(poolStartX, waterLevelY, poolEndX, waterLevelY);
+      waterGrad.addColorStop(0, 'rgba(180, 83, 9, 0.7)');
+      waterGrad.addColorStop(0.5, 'rgba(14, 116, 144, 0.7)');
+      waterGrad.addColorStop(1, 'rgba(2, 132, 199, 0.7)');
+      ctx.fillStyle = waterGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(poolStartX, waterLevelY);
+      ctx.lineTo(poolEndX, waterLevelY);
+      ctx.lineTo(poolEndX, sedimentBedY + 10);
+      ctx.lineTo(poolStartX, sedimentBedY - 15);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(poolStartX, waterLevelY);
+      for (let x = poolStartX; x <= poolEndX; x += 10) {
+        const wave = Math.sin((x + animTicks * 2) * 0.05) * 1.5;
+        ctx.lineTo(x, waterLevelY + wave);
+      }
+      ctx.stroke();
+
+      const cellW = (poolEndX - poolStartX) / state.compartments;
+      ctx.fillStyle = isLight ? '#64748b' : '#475569';
+      ctx.strokeStyle = isLight ? '#334155' : '#334155';
+      ctx.lineWidth = 2;
+
+      for (let i = 1; i < state.compartments; i++) {
+        const bx = poolStartX + i * cellW;
+        if (i % 2 === 1) {
+          ctx.fillRect(bx - 3, waterLevelY + 8, 6, pondBottomY - (waterLevelY + 8));
+          ctx.strokeRect(bx - 3, waterLevelY + 8, 6, pondBottomY - (waterLevelY + 8));
+        } else {
+          ctx.fillRect(bx - 3, groundY + 10, 6, sedimentBedY - (groundY + 10));
+          ctx.strokeRect(bx - 3, groundY + 10, 6, sedimentBedY - (groundY + 10));
+        }
+      }
+
+      ctx.strokeStyle = 'rgba(217, 119, 6, 0.6)';
+      ctx.setLineDash([4, 4]);
+      for (let i = 0; i < 6; i++) {
+        const startTrajX = poolStartX + 10 + i * 25;
+        ctx.beginPath();
+        ctx.moveTo(startTrajX, waterLevelY + 5);
+        ctx.quadraticCurveTo(startTrajX + 70, waterLevelY + 30, startTrajX + 160, sedimentBedY - 10);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      const rulerX = originX - 30;
+      ctx.strokeStyle = isLight ? '#475569' : '#94a3b8';
+      ctx.lineWidth = 1;
+      
+      drawDimensionLine(ctx, rulerX, groundY, rulerX, waterLevelY, `Tinggi Jagaan Hfb = ${state.freeboard.toFixed(2)} m`, isLight);
+      drawDimensionLine(ctx, rulerX, waterLevelY, rulerX, sedimentBedY, `Kedalaman Air Hair = ${state.waterDepth.toFixed(2)} m`, isLight);
+      drawDimensionLine(ctx, rulerX, sedimentBedY, rulerX, pondBottomY, `Ruang Sedimen Hsed = ${state.sedimentDepth.toFixed(2)} m`, isLight);
+
+      ctx.fillStyle = isLight ? '#0369a1' : '#38bdf8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`PROFIL POTONGAN MEMANJANG (A-A') — KEDALAMAN EFEKTIF & ZONA ENDAPAN`, originX, groundY - 20);
+
+      ctx.fillStyle = '#b45309';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('INLET LIMPASAN TAMBANG', poolStartX - 20, groundY + 15);
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`Qin: ${calcResults.Qin_total.toFixed(2)} m³/s`, poolStartX - 20, groundY + 28);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText('OUTLET PELIMPAH (WEIR)', poolEndX - 40, groundY + 15);
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`TSS: ${Math.round(calcResults.tss_out)} mg/L`, poolEndX - 40, groundY + 28);
+    }
+
+    // 3. Isometric 3D Model View
+    function renderIsometricView(w, h, isLight) {
+      const cx = w / 2;
+      const cy = h / 2 - 20;
+
+      const rad = (state.isoAngleY * Math.PI) / 180;
+      const pitch = 0.55;
+
+      const L = Math.min(320, w * 0.38) * state.isoZoom;
+      const W = Math.min(160, h * 0.25) * state.isoZoom;
+      const H = 70 * state.isoZoom;
+
+      function isoProj(x, y, z) {
+        const px = cx + (x - y) * Math.cos(rad);
+        const py = cy + (x + y) * Math.sin(rad) * pitch - z;
+        return { x: px, y: py };
+      }
+
+      ctx.fillStyle = isLight ? '#f1f5f9' : '#1c1917';
+      ctx.strokeStyle = isLight ? '#cbd5e1' : '#44403c';
+      ctx.lineWidth = 1;
+
+      const p0 = isoProj(-L/2, -W/2, 0);
+      const p1 = isoProj(L/2, -W/2, 0);
+      const p2 = isoProj(L/2, W/2, 0);
+      const p3 = isoProj(-L/2, W/2, 0);
+
+      const pad = 35 * state.isoZoom;
+      const t0 = isoProj(-L/2 - pad, -W/2 - pad, H);
+      const t1 = isoProj(L/2 + pad, -W/2 - pad, H);
+      const t2 = isoProj(L/2 + pad, W/2 + pad, H);
+      const t3 = isoProj(-L/2 - pad, W/2 + pad, H);
+
+      drawPoly(ctx, [t0, t1, p1, p0], isLight ? '#cbd5e1' : '#2d241e');
+      drawPoly(ctx, [t1, t2, p2, p1], isLight ? '#94a3b8' : '#231d18');
+      drawPoly(ctx, [t2, t3, p3, p2], isLight ? '#e2e8f0' : '#352c25');
+      drawPoly(ctx, [t3, t0, p0, p3], isLight ? '#cbd5e1' : '#3e342b');
+
+      drawPoly(ctx, [p0, p1, p2, p3], '#78350f');
+
+      const sedH = H * (state.sedimentDepth / (state.waterDepth + state.sedimentDepth + state.freeboard));
+      const waterH = sedH + H * (state.waterDepth / (state.waterDepth + state.sedimentDepth + state.freeboard));
+
+      const w0 = isoProj(-L/2, -W/2, waterH);
+      const w1 = isoProj(L/2, -W/2, waterH);
+      const w2 = isoProj(L/2, W/2, waterH);
+      const w3 = isoProj(-L/2, W/2, waterH);
+
+      ctx.fillStyle = 'rgba(2, 132, 199, 0.65)';
+      ctx.beginPath();
+      ctx.moveTo(w0.x, w0.y);
+      ctx.lineTo(w1.x, w1.y);
+      ctx.lineTo(w2.x, w2.y);
+      ctx.lineTo(w3.x, w3.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      const numCells = state.compartments;
+      for (let i = 1; i < numCells; i++) {
+        const lx = -L/2 + (L / numCells) * i;
+        const b0 = isoProj(lx, -W/2, 0);
+        const b1 = isoProj(lx, W/2, 0);
+        const b2 = isoProj(lx, W/2, waterH + 5);
+        const b3 = isoProj(lx, -W/2, waterH + 5);
+
+        ctx.fillStyle = isLight ? 'rgba(100, 116, 139, 0.85)' : 'rgba(71, 85, 105, 0.85)';
+        ctx.beginPath();
+        ctx.moveTo(b0.x, b0.y);
+        ctx.lineTo(b1.x, b1.y);
+        ctx.lineTo(b2.x, b2.y);
+        ctx.lineTo(b3.x, b3.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = isLight ? '#334155' : '#94a3b8';
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = isLight ? '#0369a1' : '#38bdf8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`MODEL ISOMETRIK 3D — SETTLING POND MULTI-KOMPARTEMEN`, 25, 30);
+      ctx.font = '10px sans-serif';
+      ctx.fillStyle = isLight ? '#475569' : '#94a3b8';
+      ctx.fillText('Gunakan mouse drag untuk memutar sudut pandang (Rotasi Interaktif)', 25, 46);
+    }
+
+    function drawPoly(ctx, points, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // 4. Performance Curves
+    function renderCurvesView(w, h, isLight) {
+      ctx.fillStyle = isLight ? '#f8fafc' : '#0f172a';
+      ctx.fillRect(0, 0, w, h);
+
+      const margin = 70;
+      const plotW = (w - margin * 3) / 2;
+      const plotH = h - margin * 2;
+
+      drawPlotBox(ctx, margin, margin, plotW, plotH, 'Ukuran Butir Partikel (µm) vs Efisiensi Pengendapan (%)', 'Diameter Butir (µm)', 'Efisiensi (%)', isLight);
+
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let d_um = 2; d_um <= 100; d_um += 2) {
+        const d_m = d_um * 1e-6;
+        const vs = (9.81 * (state.particleDensity - calcResults.rho_w) * d_m * d_m) / (18 * calcResults.mu) * state.flocFactor;
+        const v0 = calcResults.v0;
+        const n = 1 + state.compartments;
+        const eta = Math.min(1.0, Math.max(0, 1.0 - Math.pow(1.0 + (1.0 / n) * (vs / v0), -n)));
+
+        const plotX = margin + ((d_um - 2) / 98) * plotW;
+        const plotY = margin + plotH - (eta * plotH);
+
+        if (d_um === 2) ctx.moveTo(plotX, plotY);
+        else ctx.lineTo(plotX, plotY);
+      }
+      ctx.stroke();
+
+      const cur_um = state.particleSize * 1000;
+      const curX = margin + ((cur_um - 2) / 98) * plotW;
+      const curY = margin + plotH - ((calcResults.eta_percent / 100.0) * plotH);
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(curX, curY, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`Titik Desain: ${cur_um} µm (${calcResults.eta_percent.toFixed(1)}%)`, curX + 10, curY - 5);
+
+      const p2X = margin * 2 + plotW;
+      drawPlotBox(ctx, p2X, margin, plotW, plotH, 'Akumulasi Sedimen vs Waktu Operasional (Hari)', 'Waktu (Hari)', 'Volume Endapan (m³)', isLight);
+
+      const maxDays = Math.max(60, Math.round(calcResults.days_to_dredge * 1.5));
+      const trigY = margin + plotH - (calcResults.sed_trigger_volume / calcResults.V_sediment) * plotH;
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(p2X, trigY);
+      ctx.lineTo(p2X + plotW, trigY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText(`Batas Pengerukan (${state.dredgeThreshold}% = ${Math.round(calcResults.sed_trigger_volume)} m³)`, p2X + 10, trigY - 6);
+
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let day = 0; day <= maxDays; day += 2) {
+        const vol = day * calcResults.sed_volume_day;
+        const px = p2X + (day / maxDays) * plotW;
+        const py = margin + plotH - (Math.min(1.0, vol / calcResults.V_sediment) * plotH);
+        if (day === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    function drawPlotBox(ctx, x, y, w, h, title, xLabel, yLabel, isLight) {
+      ctx.fillStyle = isLight ? '#ffffff' : '#1e293b';
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeStyle = isLight ? '#cbd5e1' : '#334155';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, w, h);
+
+      ctx.strokeStyle = isLight ? '#f1f5f9' : '#243248';
+      for (let i = 1; i <= 4; i++) {
+        const gy = y + (h / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, gy);
+        ctx.lineTo(x + w, gy);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = isLight ? '#0369a1' : '#38bdf8';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(title, x, y - 10);
+
+      ctx.fillStyle = isLight ? '#475569' : '#94a3b8';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText(xLabel, x + w / 2 - 25, y + h + 25);
+      ctx.fillText(yLabel, x + 8, y + 18);
+    }
+
+    function drawDimensionLine(ctx, x1, y1, x2, y2, text, isLight) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(x1, y1, 2, 0, Math.PI * 2);
+      ctx.arc(x2, y2, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = isLight ? '#0f172a' : '#cbd5e1';
+      ctx.font = 'bold 10px monospace';
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2;
+      ctx.fillText(text, midX - text.length * 3, midY - 6);
+    }
+
+    function drawArrow(ctx, x, y, dx, dy, color) {
+      ctx.fillStyle = color;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + dx, y + dy);
+      ctx.stroke();
+
+      const angle = Math.atan2(dy, dx);
+      ctx.beginPath();
+      ctx.moveTo(x + dx, y + dy);
+      ctx.lineTo(x + dx - 6 * Math.cos(angle - Math.PI / 6), y + dy - 6 * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x + dx - 6 * Math.cos(angle + Math.PI / 6), y + dy - 6 * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    let isDragging = false;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+
+    canvas.addEventListener('mousedown', e => {
+      if (state.activeView === 'isometric') {
+        isDragging = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      }
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (isDragging && state.activeView === 'isometric') {
+        const dx = e.clientX - lastMouseX;
+        const dy = e.clientY - lastMouseY;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+
+        state.isoAngleY = (state.isoAngleY + dx * 0.5) % 360;
+        state.isoAngleX = Math.max(10, Math.min(80, state.isoAngleX - dy * 0.5));
+        renderActiveView();
+      }
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    // ==========================================
+    // 6. MODALS MANAGEMENT (REPORT, HELP, CREATOR)
+    // ==========================================
+    function openReportModal() {
+      const r = calcResults;
+      document.getElementById('rptDate').innerText = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('rptPreset').innerText = document.getElementById('miningPreset').selectedOptions[0].text;
+      document.getElementById('rptArea').innerText = `${state.catchmentArea} Ha (Koefisien C = ${state.runoffCoeff})`;
+      document.getElementById('rptRainfall').innerText = `${state.rainfall} mm/hari (Intensitas I = ${r.I_mm_hr.toFixed(1)} mm/jam)`;
+      document.getElementById('rptDebit').innerText = `${r.Qin_total.toFixed(2)} m³/s (${(r.Qin_total * 3600).toFixed(0)} m³/jam)`;
+      document.getElementById('rptParticle').innerText = `${state.particleSize} mm (${(state.particleSize * 1000)} µm)`;
+      document.getElementById('rptDensity').innerText = `${state.particleDensity} kg/m³ (Viskositas μ = ${(r.mu * 1e3).toFixed(3)} cP)`;
+      document.getElementById('rptStokes').innerText = `${r.Vs.toFixed(5)} m/s (${(r.Vs * 100).toFixed(3)} cm/s)`;
+      document.getElementById('rptTssIn').innerText = `${state.tssIn.toLocaleString()} mg/L`;
+      document.getElementById('rptDim').innerText = `${state.pondLength} m × ${state.pondWidth} m × ${state.waterDepth} m`;
+      document.getElementById('rptCells').innerText = `${state.compartments} Kompartemen`;
+      document.getElementById('rptAs').innerText = `${r.As.toLocaleString()} m²`;
+      document.getElementById('rptAsEval').innerText = r.As >= r.As_min ? `Memenuhi (As > As min ${r.As_min.toFixed(0)} m²)` : `Perlu Perluasan (As < As min)`;
+      document.getElementById('rptHrt').innerText = `${r.HRT_hr.toFixed(2)} Jam (${r.HRT_min.toFixed(0)} menit)`;
+      document.getElementById('rptHrtEval').innerText = `Rasio tR/ts = ${r.tr_ts_ratio.toFixed(2)} (${r.tr_ts_ratio >= 1.5 ? 'Memadai' : 'Kurang'})`;
+      document.getElementById('rptEff').innerText = `${r.eta_percent.toFixed(1)} %`;
+      document.getElementById('rptTssOut').innerText = `${Math.round(r.tss_out)} mg/L`;
+      
+      const rptTssStat = document.getElementById('rptTssStatus');
+      if (r.isCompliant) {
+        rptTssStat.style.color = '#059669';
+        rptTssStat.innerText = `MEMENUHI BAKU MUTU (≤ ${state.tssTarget} mg/L)`;
+      } else {
+        rptTssStat.style.color = '#dc2626';
+        rptTssStat.innerText = `MELEBIHI BAKU MUTU (> ${state.tssTarget} mg/L)`;
+      }
+
+      document.getElementById('rptSedCap').innerText = r.V_sediment.toLocaleString();
+      document.getElementById('rptDailySed').innerText = r.sed_volume_day.toFixed(1);
+      document.getElementById('rptDredgeDays').innerText = Math.round(r.days_to_dredge);
+
+      document.getElementById('modalReport').classList.add('open');
+    }
+
+    function openHelpModal() {
+      document.getElementById('helpModal').classList.add('open');
+      speakText("Membuka buku panduan dan dokumentasi sistem.");
+    }
+
+    function closeHelpModal() {
+      document.getElementById('helpModal').classList.remove('open');
+    }
+
+    function openCreatorModal() {
+      document.getElementById('creatorModal').classList.add('open');
+      speakText("Membuka profil pengembang Mohamad Hartadi.");
+    }
+
+    function closeCreatorModal() {
+      document.getElementById('creatorModal').classList.remove('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    // ==========================================
+    // 7. CHATBOT COPILOT ENGINE
+    // ==========================================
+    function toggleChatWindow() {
+      const win = document.getElementById('chatWindow');
+      if (win.style.display === 'flex') {
+        win.style.display = 'none';
+      } else {
+        win.style.display = 'flex';
+      }
+    }
+
+    function clearChatHistory() {
+      document.getElementById('chatMessages').innerHTML = `
+        <div class="chat-card-animated" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px solid var(--border-color); max-width: 95%;">
+          <span style="color: #38bdf8; font-family: monospace; font-size: 10px; font-weight: 800; display: block; margin-bottom: 4px;">
+            <i class="fa-solid fa-terminal text-cyan-500"></i> MINEPOND KERNEL REBOOTED:
+          </span>
+          Riwayat percakapan telah dibersihkan. Sistem siap menerima perintah baru.
+        </div>
+      `;
+    }
+
+    function toggleVoiceAssistant() {
+      state.voiceEnabled = !state.voiceEnabled;
+      const icon = document.getElementById('iconVoiceToggle');
+      const btn = document.getElementById('btnVoiceToggle');
+      if (state.voiceEnabled) {
+        icon.className = "fa-solid fa-volume-high text-sm";
+        btn.style.borderColor = "#0284c7";
+        btn.style.color = "#38bdf8";
+        speakText("Asisten suara MinePond Studio aktif.");
+      } else {
+        icon.className = "fa-solid fa-volume-xmark text-sm";
+        btn.style.borderColor = "#64748b";
+        btn.style.color = "#94a3b8";
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakText(text) {
+      if (!state.voiceEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const clean = text.replace(/<[^>]*>?/gm, '');
+      const utt = new SpeechSynthesisUtterance(clean);
+      utt.lang = 'id-ID';
+      window.speechSynthesis.speak(utt);
+    }
+
+    function startVoiceRecognition() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("Peramban Anda belum mendukung fitur pengenalan suara (Web Speech API).");
+        return;
+      }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR();
+      rec.lang = 'id-ID';
+      rec.start();
+
+      const btn = document.getElementById('micBtn');
+      btn.style.background = '#7f1d1d';
+      btn.style.color = '#f87171';
+
+      rec.onresult = function(e) {
+        const transcript = e.results[0][0].transcript;
+        document.getElementById('chatInput').value = transcript;
+        processChatMessage();
+      };
+      rec.onend = function() {
+        btn.style.background = 'var(--bg-input)';
+        btn.style.color = '#38bdf8';
+      };
+      rec.onerror = function() {
+        btn.style.background = 'var(--bg-input)';
+        btn.style.color = '#38bdf8';
+      };
+    }
+
+    function triggerChatShortcut(type) {
+      const inp = document.getElementById('chatInput');
+      if (type === 'creator') inp.value = "Tampilkan Profil & Data Programmer Pengembang Sistem";
+      else if (type === 'my_aplikasi') inp.value = "Buka Direktori Portofolio Aplikasi Ekosistem";
+      else if (type === 'stokes') inp.value = "Bagaimana analisis kecepatan pengendapan partikel berdasarkan Hukum Stokes?";
+      else if (type === 'hidrologi') inp.value = "Hitung debit limpasan rencana dan intensitas curah hujan DTA saat ini";
+      else if (type === 'baku_mutu') inp.value = "Apakah kualitas effluent saat ini memenuhi baku mutu lingkungan ESDM dan KLHK?";
+      else if (type === 'pengerukan') inp.value = "Kapan jadwal pengerukan kolam pengendapan harus dilaksanakan?";
+      else if (type === 'koagulan') inp.value = "Bagaimana rekomendasi penggunaan koagulan PAC dan flokulan?";
+      processChatMessage();
+    }
+
+    async function processChatMessage() {
+      const inp = document.getElementById('chatInput');
+      const val = inp.value.trim();
+      if (!val) return;
+
+      const box = document.getElementById('chatMessages');
+      box.innerHTML += `
+        <div class="chat-card-animated" style="background: var(--accent-blue); padding: 0.65rem 0.85rem; border-radius: 10px; align-self: flex-end; max-width: 85%; color: white; margin-left: auto; font-weight: 500;">
+          <span style="font-size: 9px; font-family: monospace; display: block; font-weight: 800; color: #bae6fd; margin-bottom: 2px;">USER:</span>
+          ${val}
+        </div>
+      `;
+      inp.value = '';
+      box.scrollTop = box.scrollHeight;
+
+      let botReply = "";
+      let speechText = "";
+      const q = val.toLowerCase();
+      const r = calcResults;
+
+      if (q.includes('creator') || q.includes('programmer') || q.includes('pembuat') || q.includes('pengembang') || q.includes('hartadi') || q.includes('profil')) {
+        botReply = `
+          <div class="chat-glow-creator" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid rgba(236, 72, 153, 0.4); padding-bottom: 0.5rem;">
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: #0f172a; border: 2px solid #ec4899; display: flex; align-items: center; justify-content: center; color: #f472b6; font-size: 1.25rem;">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <div>
+                <span style="font-size: 8px; background: rgba(236, 72, 153, 0.2); color: #f472b6; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-family: monospace;">LEAD SYSTEM ARCHITECT</span>
+                <h4 class="font-tech" style="font-size: 1rem; color: #f472b6; font-weight: 900; margin-top: 2px;">MOHAMAD HARTADI</h4>
+                <p style="font-size: 9px; color: var(--text-muted); font-weight: bold;">Civil, Geotechnical & Mining Environmental Computing Specialist</p>
+              </div>
+            </div>
+
+            <div style="font-size: 10px; font-family: monospace; color: var(--text-main); display: flex; flex-direction: column; gap: 0.35rem;">
+              <div>📞 <b>WhatsApp Resmi:</b> <a href="https://wa.me/6282231036047?text=Halo%20Mohamad%20Hartadi%20MinePond" target="_blank" style="color: #34d399; font-weight: bold;">082231036047</a></div>
+              <div>🌐 <b>Facebook:</b> <a href="https://www.facebook.com/m.hartadi" target="_blank" style="color: #38bdf8;">facebook.com/m.hartadi</a></div>
+              <div>📝 <b>Portal Blog:</b> <a href="https://newbieonline7.blogspot.com/" target="_blank" style="color: #f472b6;">newbieonline7.blogspot.com</a></div>
+              <div>🏗️ <b>Aplikasi Terintegrasi:</b> <a href="https://adikds-byte.github.io/Seismic_Site_Report_Pro/" target="_blank" style="color: #fbbf24;">Seismic Site Report Pro (SNI 1726)</a></div>
+            </div>
+
+            <button onclick="openCreatorModal()" class="btn btn-purple" style="width: 100%; justify-content: center; padding: 0.4rem; font-size: 10px; margin-top: 4px;">
+              <i class="fa-solid fa-id-card"></i> Buka Detail Profil Kreator
+            </button>
+          </div>
+        `;
+        speechText = "Menampilkan profil resmi pengembang sistem Mohamad Hartadi.";
+      }
+      else if (q.includes('aplikasi') || q.includes('portofolio') || q.includes('direktori')) {
+        botReply = `
+          <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center;">
+              <b style="color: #38bdf8; font-size: 11px;"><i class="fa-solid fa-sitemap mr-1"></i> PORTOFOLIO APLIKASI REKAYASA & AI</b>
+              <span style="font-size: 9px; font-family: monospace; background: rgba(2, 132, 199, 0.2); color: #38bdf8; padding: 2px 6px; border-radius: 4px;">39 APLIKASI</span>
+            </div>
+            <p style="font-size: 10px; color: var(--text-muted);">
+              Ekosistem aplikasi web rekayasa sipil, geoteknik, mitigasi bencana, hidrologi, dan kecerdasan artifisial karya Mohamad Hartadi:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 10px; font-family: monospace;">
+              <div>1. <b>Seismic Site Report Pro:</b> <a href="https://adikds-byte.github.io/Seismic_Site_Report_Pro/" target="_blank" style="color: #fbbf24;">Kalkulator Gempa SNI 1726</a></div>
+              <div>2. <b>DSS Sedimen Pro:</b> <a href="https://adikds.github.io/dss-sedimen-pro/" target="_blank" style="color: #34d399;">Sistem Pengelolaan Sedimen</a></div>
+              <div>3. <b>InaTEWS Tsunami Alert:</b> <a href="https://adikds.github.io/SISTEM-MONITORING-SEISMIK-PERINGATAN-TSUNAMI/" target="_blank" style="color: #f43f5e;">Sistem Peringatan Dini Gempa & Tsunami</a></div>
+              <div>4. <b>HydraCanal Pro:</b> <a href="https://adikds.github.io/HYDRACANAL-PRO-GEOMETRIC-DESIGN/" target="_blank" style="color: #38bdf8;">Desain Saluran Terbuka</a></div>
+              <div>5. <b>GeoStruct Pro:</b> <a href="https://adikds.github.io/GEOSTRUCT-PRO-20-FORMULA-GEOTECHNICAL/" target="_blank" style="color: #a78bfa;">20 Formula Geoteknik Tambang</a></div>
+            </div>
+          </div>
+        `;
+        speechText = "Menampilkan direktori aplikasi rekayasa dan geoteknik karya Mohamad Hartadi.";
+      }
+      else if (q.includes('stokes') || q.includes('kecepatan') || q.includes('endap') || q.includes('vs')) {
+        botReply = `
+          <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+            <b style="color: #38bdf8; font-size: 11px;"><i class="fa-solid fa-water mr-1"></i> ANALISIS SEDIMENTASI HUKUM STOKES</b>
+            <div style="font-size: 11px; color: var(--text-main); font-family: monospace; display: flex; flex-direction: column; gap: 2px;">
+              <div>● <b>Diameter Butir Kritis (d):</b> ${state.particleSize} mm (${state.particleSize * 1000} µm)</div>
+              <div>● <b>Densitas Partikel Solid (ρs):</b> ${state.particleDensity} kg/m³</div>
+              <div>● <b>Temperatur & Viskositas Air:</b> ${state.waterTemp}°C (μ = ${(r.mu * 1e3).toFixed(3)} cP)</div>
+              <div>● <b>Kecepatan Endap Stokes (Vs):</b> <span style="color: #34d399; font-weight: bold;">${(r.Vs).toFixed(5)} m/s (${(r.Vs * 100).toFixed(3)} cm/s)</span></div>
+              <div>● <b>Faktor Akselerasi Flokulan:</b> ${state.flocFactor}x</div>
+              <div>● <b>Waktu Pengendapan (ts):</b> ${r.ts_min.toFixed(1)} menit</div>
+            </div>
+          </div>
+        `;
+        speechText = `Kecepatan pengendapan partikel Stokes sebesar ${r.Vs.toFixed(5)} meter per detik dengan waktu pengendapan ${r.ts_min.toFixed(1)} menit.`;
+      }
+      else if (q.includes('hidrologi') || q.includes('debit') || q.includes('hujan') || q.includes('qin')) {
+        botReply = `
+          <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+            <b style="color: #fbbf24; font-size: 11px;"><i class="fa-solid fa-cloud-showers-heavy mr-1"></i> ANALISIS HIDROLOGI & DEBIT LIMPASAN (QIN)</b>
+            <div style="font-size: 11px; color: var(--text-main); font-family: monospace; display: flex; flex-direction: column; gap: 2px;">
+              <div>● <b>Luas Catchment (DTA):</b> ${state.catchmentArea} Ha (C = ${state.runoffCoeff})</div>
+              <div>● <b>Curah Hujan R24:</b> ${state.rainfall} mm/hari (tc = ${state.tc} Jam)</div>
+              <div>● <b>Intensitas Mononobe (I):</b> ${r.I_mm_hr.toFixed(1)} mm/jam</div>
+              <div>● <b>Debit Limpasan Puncak (Q_runoff):</b> ${r.Q_runoff.toFixed(3)} m³/s</div>
+              <div>● <b>Debit Pompa Tambang:</b> ${r.Q_pump_m3_s.toFixed(3)} m³/s (${state.pumpFlow} m³/jam)</div>
+              <div>● <b>Total Debit Desain (Qin):</b> <span style="color: #38bdf8; font-weight: bold;">${r.Qin_total.toFixed(2)} m³/s (${(r.Qin_total * 3600).toFixed(0)} m³/jam)</span></div>
+            </div>
+          </div>
+        `;
+        speechText = `Total debit air tambang masuk desain adalah sebesar ${r.Qin_total.toFixed(2)} meter kubik per detik.`;
+      }
+      else if (q.includes('baku mutu') || q.includes('tss') || q.includes('regulasi') || q.includes('limbah')) {
+        botReply = `
+          <div class="${r.isCompliant ? 'chat-glow-compliance' : 'chat-glow-warning'}" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+            <b style="color: ${r.isCompliant ? '#34d399' : '#fb7185'}; font-size: 11px;">
+              <i class="fa-solid ${r.isCompliant ? 'fa-circle-check' : 'fa-triangle-exclamation'} mr-1"></i> 
+              EVALUASI BAKU MUTU LINGKUNGAN (TSS OUTLET)
+            </b>
+            <div style="font-size: 11px; color: var(--text-main); font-family: monospace; display: flex; flex-direction: column; gap: 2px;">
+              <div>● <b>TSS Air Limbah Masuk (Inlet):</b> ${state.tssIn.toLocaleString()} mg/L</div>
+              <div>● <b>Efisiensi Pengendapan (η):</b> ${r.eta_percent.toFixed(1)}%</div>
+              <div>● <b>TSS Terbuang (Outlet):</b> <b style="color: ${r.isCompliant ? '#34d399' : '#fb7185'}; font-size: 12px;">${Math.round(r.tss_out)} mg/L</b></div>
+              <div>● <b>Ambang Batas Baku Mutu:</b> ≤ ${state.tssTarget} mg/L (Permen LH 113 / Kepmen 1827)</div>
+              <div>● <b>Status Kepatuhan:</b> <b style="color: ${r.isCompliant ? '#34d399' : '#fb7185'};">${r.isCompliant ? 'MEMENUHI SYARAT REGULASI' : 'MELEBIHI AMBANG BATAS!'}</b></div>
+            </div>
+          </div>
+        `;
+        speechText = r.isCompliant 
+          ? `TSS outlet terprediksi adalah ${Math.round(r.tss_out)} mg per liter, memenuhi standar baku mutu lingkungan.` 
+          : `Peringatan, TSS outlet sebesar ${Math.round(r.tss_out)} mg per liter melampaui baku mutu.`;
+      }
+      else if (q.includes('keruk') || q.includes('pengerukan') || q.includes('sedimen') || q.includes('dredg')) {
+        botReply = `
+          <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+            <b style="color: #fb7185; font-size: 11px;"><i class="fa-solid fa-truck-monster mr-1"></i> MANAJEMEN PENGERUKAN & AKUMULASI SEDIMEN</b>
+            <div style="font-size: 11px; color: var(--text-main); font-family: monospace; display: flex; flex-direction: column; gap: 2px;">
+              <div>● <b>Kapasitas Ruang Sedimen Kolam:</b> ${r.V_sediment.toLocaleString()} m³</div>
+              <div>● <b>Laju Akumulasi Sedimen:</b> ${r.sed_volume_day.toFixed(1)} m³/hari (~${r.mass_influx_day_ton.toFixed(1)} ton/hari)</div>
+              <div>● <b>Batas Ambang Pengerukan:</b> ${state.dredgeThreshold}% (${Math.round(r.sed_trigger_volume)} m³)</div>
+              <div>● <b>Jadwal Interval Pengerukan:</b> <span style="color: #fbbf24; font-weight: bold;">Setiap ${Math.round(r.days_to_dredge)} Hari Sekali (~${(r.days_to_dredge/30).toFixed(1)} Bulan)</span></div>
+              <div>● <b>Kebutuhan Jam Kerja Excavator:</b> ${r.excavator_hours.toFixed(1)} Jam (@ ${state.dredgeProd} m³/jam)</div>
+            </div>
+          </div>
+        `;
+        speechText = `Jadwal pengerukan kolam pengendapan direkomendasikan setiap ${Math.round(r.days_to_dredge)} hari sekali.`;
+      }
+      else if (q.includes('koagulan') || q.includes('pac') || q.includes('tawas') || q.includes('flokulan')) {
+        botReply = `
+          <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+            <b style="color: #22d3ee; font-size: 11px;"><i class="fa-solid fa-flask-vial mr-1"></i> REKOMENDASI PENGGUNAAN KOAGULAN & FLOKULAN</b>
+            <p style="font-size: 10px; color: var(--text-muted); line-height: 1.5;">
+              Zat koagulan dan flokulan digunakan saat air limpasan tambang mengandung partikel koloid bermuatan negatif (lempung/lanau halus) yang sulit mengendap secara gravitasi murni:
+            </p>
+            <div style="font-size: 10px; font-family: monospace; display: flex; flex-direction: column; gap: 2px;">
+              <div>1. <b>Tawas (Alum / Al2(SO4)3):</b> Dosis 20–50 ppm, efektif untuk kekeruhan moderat.</div>
+              <div>2. <b>PAC (Poly Aluminium Chloride):</b> Dosis 10–30 ppm, bekerja cepat pada rentang pH luas (6–9).</div>
+              <div>3. <b>Polimer Anionik / Kationik:</b> Dosis 0.5–2 ppm untuk memperbesar flok lumpur.</div>
+              <div>● <b>Titik Injeksi Terbaik:</b> Saluran inlet sebelum Kompartemen 2 dengan turbulensi hidrolik untuk mixing optimal.</div>
+            </div>
+          </div>
+        `;
+        speechText = "Rekomendasi koagulan: gunakan PAC dengan dosis 10 hingga 30 ppm untuk mempercepat pengendapan lumpur halus.";
+      }
+      else {
+        // Fallback to Wikipedia search API
+        const loadId = "load-" + Date.now();
+        box.innerHTML += `<div id="${loadId}" style="background: var(--bg-card); padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 10px; color: var(--text-muted); font-family: monospace;"><i class="fa-solid fa-circle-notch fa-spin mr-2" style="color: #0284c7;"></i>Mencari di ensiklopedia Wikipedia & Google...</div>`;
+        box.scrollTop = box.scrollHeight;
+
+        try {
+          const apiRes = await fetch(`https://id.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=1&prop=extracts&exintro=1&explaintext=1&utf8=&format=json&origin=*`);
+          const data = await apiRes.json();
+          
+          const loader = document.getElementById(loadId);
+          if (loader) loader.remove();
+
+          const googleLink = `https://www.google.com/search?q=${encodeURIComponent(val)}`;
+
+          if (data.query && data.query.pages) {
+            const pageId = Object.keys(data.query.pages)[0];
+            if (pageId && pageId !== "-1") {
+              const title = data.query.pages[pageId].title;
+              const extract = data.query.pages[pageId].extract || "Penjelasan ilmiah lengkap tersedia di ensiklopedia.";
+              const wikiLink = `https://id.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+
+              botReply = `
+                <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+                  <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <b style="color: #38bdf8; font-size: 11px;">[WIKIPEDIA: ${title}]</b>
+                    <i class="fa-brands fa-wikipedia-w" style="color: #38bdf8;"></i>
+                  </div>
+                  <p style="font-size: 10px; color: var(--text-main); line-height: 1.5; max-height: 120px; overflow-y: auto;">
+                    ${extract}
+                  </p>
+                  <div style="display: flex; gap: 0.5rem; margin-top: 4px;">
+                    <a href="${wikiLink}" target="_blank" class="btn btn-secondary" style="flex: 1; justify-content: center; font-size: 9px; padding: 4px;">Buka Wikipedia</a>
+                    <a href="${googleLink}" target="_blank" class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 9px; padding: 4px;">Google Search</a>
+                  </div>
+                </div>
+              `;
+              speechText = `Menampilkan rujukan informasi mengenai ${title}.`;
+            }
+          }
+
+          if (!botReply) {
+            botReply = `
+              <div class="chat-glow-stokes" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; display: flex; flex-direction: column; gap: 0.4rem;">
+                <b style="color: #38bdf8; font-size: 11px;">ANALISIS PENGETAHUAN: "${val}"</b>
+                <p style="font-size: 10px; color: var(--text-muted);">
+                  Pertanyaan Anda telah diproses. Telusuri literatur ilmiah lengkap melalui Google Search:
+                </p>
+                <a href="${googleLink}" target="_blank" class="btn btn-primary" style="justify-content: center; font-size: 10px; padding: 5px;">
+                  <i class="fa-brands fa-google mr-1"></i> Telusuri di Google
+                </a>
+              </div>
+            `;
+            speechText = "Pertanyaan Anda telah diproses.";
+          }
+        } catch(e) {
+          const loader = document.getElementById(loadId);
+          if (loader) loader.remove();
+          botReply = `<div style="padding: 0.5rem; border-radius: 8px; border: 1px solid #ef4444; color: #f87171; font-size: 10px;">Gangguan jaringan saat menghubungi server Wikipedia.</div>`;
+          speechText = "Terjadi gangguan jaringan.";
+        }
+      }
+
+      setTimeout(() => {
+        box.innerHTML += `
+          <div class="chat-card-animated" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px solid var(--border-color); max-width: 95%; box-shadow: var(--shadow-card);">
+            <span style="color: #38bdf8; font-family: monospace; font-size: 10px; font-weight: 800; display: block; margin-bottom: 6px; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; display: flex; align-items: center; gap: 4px;">
+              <i class="fa-solid fa-robot text-cyan-400"></i> MINEPOND AI COPILOT:
+            </span>
+            ${botReply}
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+        speakText(speechText);
+      }, 200);
+    }
+
+    // ==========================================
+    // 8. EXPORT CSV DATA
+    // ==========================================
+    function exportDataCSV() {
+      const r = calcResults;
+      const csvRows = [
+        ['Parameter', 'Nilai', 'Satuan', 'Keterangan'],
+        ['Luas Catchment', state.catchmentArea, 'Ha', 'Daerah tangkapan air limpasan'],
+        ['Koefisien Limpasan C', state.runoffCoeff, '-', 'Tutupan lahan tambang'],
+        ['Curah Hujan R24', state.rainfall, 'mm/hari', 'Curah hujan rencana'],
+        ['Intensitas Hujan I', r.I_mm_hr.toFixed(2), 'mm/jam', 'Rumus Mononobe'],
+        ['Debit Total Qin', r.Qin_total.toFixed(3), 'm3/s', 'Limpasan + Pompa'],
+        ['Diameter Partikel', state.particleSize, 'mm', 'Ukuran butir kritis'],
+        ['Densitas Partikel', state.particleDensity, 'kg/m3', 'Solid density'],
+        ['Kecepatan Endap Stokes Vs', r.Vs.toFixed(6), 'm/s', 'Stokes Law'],
+        ['Panjang Kolam L', state.pondLength, 'm', 'Dimensi horisontal'],
+        ['Lebar Kolam W', state.pondWidth, 'm', 'Dimensi melintang'],
+        ['Kedalaman Air', state.waterDepth, 'm', 'Kedalaman efektif'],
+        ['Kedalaman Sedimen', state.sedimentDepth, 'm', 'Zona lumpur'],
+        ['Tinggi Jagaan Freeboard', state.freeboard, 'm', 'Tinggi jagaan tanggul'],
+        ['Jumlah Kompartemen', state.compartments, 'Sel', 'Baffle sekat'],
+        ['Luas Permukaan Kolam', r.As, 'm2', 'Surface area'],
+        ['Volume Efektif Kolam', r.V_water, 'm3', 'Water volume'],
+        ['Waktu Tinggal HRT', r.HRT_hr.toFixed(2), 'Jam', 'Hydraulic retention time'],
+        ['Efisiensi Pengendapan', r.eta_percent.toFixed(2), '%', 'Camp-Hazen Model'],
+        ['TSS Masuk Inlet', state.tssIn, 'mg/L', 'Konsentrasi inlet'],
+        ['TSS Keluar Outlet', r.tss_out.toFixed(1), 'mg/L', 'Konsentrasi outlet'],
+        ['Baku Mutu TSS', state.tssTarget, 'mg/L', 'Standar regulasi'],
+        ['Status Baku Mutu', r.isCompliant ? 'MEMENUHI' : 'MELEBIHI', '-', 'Evaluasi kepatuhan'],
+        ['Interval Pengerukan', r.days_to_dredge.toFixed(1), 'Hari', 'Jadwal dredging']
+      ];
+
+      const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Analisis_Settling_Pond_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Window resize handler
+    window.addEventListener('resize', () => {
+      renderActiveView();
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'Escape') {
+        closeCreatorModal();
+        closeHelpModal();
+        closeModal('modalReport');
+        turnOffScreensaverMode();
+      } else if (e.key === 's' || e.key === 'S') {
+        turnOnScreensaverMode();
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleTheme();
+      } else if (e.key === 'c' || e.key === 'C') {
+        toggleChatWindow();
+      } else if (e.key === '?') {
+        openHelpModal();
+      }
+    });
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedTheme = localStorage.getItem('minepond_theme');
+        if (savedTheme) {
+          setTheme(savedTheme);
+        }
+      } catch (e) {}
+
+      updateClockDisplays();
+      setInterval(updateClockDisplays, 1000);
+      drawBootCanvas();
+
+      refreshInputUI();
+      recalculate();
+      animateLoop();
+
+      setTimeout(dismissLoadingScreen, 2200);
+    });
+  </script>
+</body>
+</html>
