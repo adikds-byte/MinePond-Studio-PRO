@@ -1,6 +1,177 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
+  <!-- ========================================================================= -->
+  <!-- EARLY GUARD: LAPISAN PROTEKSI KEAMANAN SISTEM & ANTI-INSPEKSI AUDIT MINERBA -->
+  <!-- ========================================================================= -->
+  <script>
+    (function() {
+      // 1. Audio Alert Synthesizer via Web Audio API
+      let audioCtx = null;
+      function playSecurityAlertBeep() {
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const now = audioCtx.currentTime;
+          
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(880, now);
+          osc1.frequency.exponentialRampToValueAtTime(440, now + 0.18);
+          osc2.frequency.setValueAtTime(660, now);
+          osc2.frequency.exponentialRampToValueAtTime(220, now + 0.18);
+
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.2);
+          osc2.stop(now + 0.2);
+        } catch(e) {}
+      }
+
+      // 2. Security Toast HUD Function
+      window.showSecurityToast = function(title, message) {
+        playSecurityAlertBeep();
+        let toastContainer = document.getElementById('securityToastHUD');
+        if (!toastContainer) {
+          toastContainer = document.createElement('div');
+          toastContainer.id = 'securityToastHUD';
+          toastContainer.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+          (document.body || document.documentElement).appendChild(toastContainer);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'security-toast-item';
+        toast.style.cssText = `
+          pointer-events:auto;
+          background:linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(127, 29, 29, 0.95));
+          border: 1.5px solid #ef4444;
+          box-shadow: 0 10px 30px rgba(239, 68, 68, 0.45), inset 0 0 15px rgba(239, 68, 68, 0.2);
+          border-radius: 10px;
+          padding: 12px 16px;
+          color: #f8fafc;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          min-width: 320px;
+          max-width: 420px;
+          backdrop-filter: blur(12px);
+          animation: securityToastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+        `;
+
+        toast.innerHTML = `
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.25);border:1px solid #ef4444;display:flex;align-items:center;justify-content:center;color:#ef4444;font-size:18px;flex-shrink:0;">
+            🛡️
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+              <span style="font-size:11px;font-weight:900;letter-spacing:0.05em;color:#fca5a5;text-transform:uppercase;font-family:monospace;">
+                ${title || 'SECURITY AUDIT GUARD'}
+              </span>
+              <span style="font-size:9px;background:#ef4444;color:white;padding:1px 5px;border-radius:3px;font-weight:bold;">BLOCKED</span>
+            </div>
+            <div style="font-size:11px;line-height:1.4;color:#e2e8f0;font-weight:600;">
+              ${message || 'Pintasan dinonaktifkan demi integritas audit inspeksi tambang.'}
+            </div>
+            <div style="font-size:9px;color:#94a3b8;margin-top:4px;font-family:monospace;">
+              Ref: Kepmen ESDM 1827 K/2018 & Permen LHK No. 113/2003
+            </div>
+          </div>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.transition = 'all 0.35s ease';
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-15px) scale(0.95)';
+          setTimeout(() => toast.remove(), 350);
+        }, 3200);
+      };
+
+      // 3. Proteksi Klik Kanan (Context Menu)
+      window.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.showSecurityToast('PROTEKSI KLIK KANAN', 'Menu konteks dinonaktifkan untuk menjaga integritas & otentisitas data audit settling pond.');
+        return false;
+      }, true);
+
+      // 4. Pemblokiran Pintasan Pengembang & Inspeksi
+      window.addEventListener('keydown', function(e) {
+        const isCtrl = e.ctrlKey || e.metaKey;
+        const isShift = e.shiftKey;
+        const key = (e.key || '').toUpperCase();
+        const code = e.keyCode || e.which;
+
+        // F12 (DevTools)
+        if (key === 'F12' || code === 123) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.showSecurityToast('INSPEKSI DEVTOOLS DIBLOKIR', 'Pintasan F12 (Developer Tools) dinonaktifkan demi integritas audit.');
+          return false;
+        }
+
+        // Ctrl + U & Cmd + U (View Source)
+        if (isCtrl && (key === 'U' || code === 85)) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.showSecurityToast('LIHAT SUMBER DIBLOKIR', 'Pintasan Ctrl+U / Cmd+U (View Page Source) dinonaktifkan.');
+          return false;
+        }
+
+        // Ctrl + Shift + I / J / C / K / E (Inspect Element, Console, Elements Picker)
+        if (isCtrl && isShift && (key === 'I' || key === 'J' || key === 'C' || key === 'K' || key === 'E' || code === 73 || code === 74 || code === 67 || code === 75 || code === 69)) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.showSecurityToast('PINTASAN INSPEKSI DIBLOKIR', `Pintasan Ctrl+Shift+${key} (Inspector/Console) dinonaktifkan.`);
+          return false;
+        }
+
+        // Ctrl + S & Cmd + S (Save Page)
+        if (isCtrl && (key === 'S' || code === 83)) {
+          if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            e.stopPropagation();
+            window.showSecurityToast('SIMPAN HALAMAN DIBLOKIR', 'Pintasan Ctrl+S dinonaktifkan. Gunakan menu resmi Ekspor CSV atau Cetak Laporan A4.');
+            return false;
+          }
+        }
+      }, true);
+
+      // 5. Drag & Drop Protection
+      window.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG' || e.target.tagName === 'CANVAS') {
+          e.preventDefault();
+        }
+      }, true);
+
+      // 6. Watermark Console
+      try {
+        console.clear();
+        console.log(
+          '%c⚠️ PERINGATAN RESMI KESELAMATAN & AUDIT TEKNIK PERTAMBANGAN\n' +
+          '%cSistem Aplikasi Evaluasi Dimensi Kolam Pengendap Lumpur (Settling Pond) Tambang\n' +
+          'Berdasarkan Kepmen ESDM No. 1827 K/30/MEM/2018 & Permen LH No. 113 Tahun 2003.\n' +
+          'Hak Cipta & Integritas Dokumen Audit Dilindungi Protokol Keamanan.',
+          'color:#ef4444;font-size:13px;font-weight:bold;background:#1e293b;padding:8px;border-radius:4px;',
+          'color:#38bdf8;font-size:11px;'
+        );
+      } catch(e) {}
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MinePond Studio™ PRO – Analisis & Desain Visual Settling Pond Penambangan</title>
@@ -1455,6 +1626,7 @@
             <button class="view-tab-btn" id="btnViewSection" onclick="switchVisualView('section')">📏 Potongan Memanjang (Profile)</button>
             <button class="view-tab-btn" id="btnViewIso" onclick="switchVisualView('isometric')">🧊 Model Isometrik 3D</button>
             <button class="view-tab-btn" id="btnViewCurves" onclick="switchVisualView('curves')">📈 Kurva Kinerja Stokes</button>
+            <button class="view-tab-btn" id="btnViewAudit" onclick="switchVisualView('audit')" style="border-color: #ef4444; color: #f87171;"><i class="fa-solid fa-clipboard-check mr-1"></i> Mode Audit Inspektur Tambang</button>
           </div>
 
           <div class="view-controls" id="viewControls">
@@ -1467,6 +1639,139 @@
         <!-- Canvas Container Card -->
         <div class="canvas-card" id="canvasCard">
           <canvas id="mainCanvas"></canvas>
+
+          <!-- INSPECTOR AUDIT & TROUBLESHOOTING PANEL (VIEW 5) -->
+          <div id="auditDashboardPanel" style="position: absolute; inset: 0; background: var(--bg-card); z-index: 25; padding: 1.25rem; overflow-y: auto; display: none; flex-direction: column; gap: 1rem;">
+            
+            <!-- Audit Header Banner -->
+            <div style="background: linear-gradient(135deg, rgba(127, 29, 29, 0.4), rgba(15, 23, 42, 0.9)); border: 1.5px solid #ef4444; padding: 1rem 1.25rem; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(239, 68, 68, 0.25); border: 1.5px solid #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #f87171;">
+                  ⚖️
+                </div>
+                <div>
+                  <span style="font-size: 9px; font-family: monospace; font-weight: bold; background: #7f1d1d; color: #fecaca; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                    KEPMEN ESDM NO. 1827 K/30/MEM/2018 & PERMEN LH 113/2003
+                  </span>
+                  <h3 class="font-tech" style="font-size: 1.1rem; color: #f87171; font-weight: 900; margin-top: 3px;">
+                    PANEL AUDIT KELAISAN KPL & DIAGNOSA AIR KERUH (TSS TINGGI)
+                  </h3>
+                  <p style="font-size: 11px; color: var(--text-muted);">
+                    Evaluasi Kepatuhan Teknis Inspektur Tambang atas Ketidakakuratan Waktu Retensi (HRT) & Kecepatan Pengendapan Stokes
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-primary" onclick="autoOptimizePond()" style="background: #0284c7;">
+                  ⚡ Terapkan Solusi Rekayasa Air Keruh
+                </button>
+                <button class="btn btn-secondary" onclick="openBeritaAcaraModal()" style="border-color: #ef4444; color: #f87171;">
+                  📜 Terbitkan Berita Acara Audit Minerba
+                </button>
+              </div>
+            </div>
+
+            <!-- Audit Status Scorecard & Diagnosis Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+              
+              <!-- Card 1: Luas Kolam vs Luas Kritis -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_Area">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">1. Luas Permukaan Kolam (As vs As min)</span>
+                  <span id="auditBadge_Area" class="kpi-status-badge badge-success">MEMADAI</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  As Tersedia: <b id="auditVal_As" style="color: var(--text-main);">2250 m²</b> | As Kritis (Q/Vs): <b id="auditVal_AsMin" style="color: var(--text-heading);">1950 m²</b>
+                </div>
+                <p id="auditDesc_Area" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Luas kolam mencukupi sehingga overflow rate (v0) lebih kecil dari kecepatan endap partikel Stokes (Vs).
+                </p>
+              </div>
+
+              <!-- Card 2: Rasio Retensi Hidrolik -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_HRT">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">2. Waktu Retensi Hidrolik (HRT vs ts)</span>
+                  <span id="auditBadge_HRT" class="kpi-status-badge badge-success">AMAN</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  Waktu Retensi tR: <b id="auditVal_tR" style="color: var(--text-main);">111.0 Menit</b> | Waktu Endap ts: <b id="auditVal_ts" style="color: var(--text-heading);">45.2 Menit</b>
+                </div>
+                <p id="auditDesc_HRT" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Rasio tR/ts ≥ 1.5x. Partikel memiliki waktu yang cukup untuk mencapai zona lumpur dasar sebelum air melimpas.
+                </p>
+              </div>
+
+              <!-- Card 3: Arus Pintas & Sekat -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_ShortCircuit">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">3. Geometri Kolam & Sekat Baffle</span>
+                  <span id="auditBadge_ShortCircuit" class="kpi-status-badge badge-success">SESUAI STANDAR</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  Rasio L/W: <b id="auditVal_LW" style="color: var(--text-main);">3.6:1</b> | Sekat: <b id="auditVal_Cells" style="color: var(--text-heading);">4 Kompartemen</b>
+                </div>
+                <p id="auditDesc_ShortCircuit" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Rasio L/W ≥ 3:1 dan sekat zig-zag efektif mencegah arus pintas (short-circuiting).
+                </p>
+              </div>
+
+              <!-- Card 4: Resuspensi Kecepatan Alir Horisontal -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_Vh">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">4. Kecepatan Alir Horisontal (Anti-Scour)</span>
+                  <span id="auditBadge_Vh" class="kpi-status-badge badge-success">TENANG (< 0.05 m/s)</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  Kecepatan Alir Vh: <b id="auditVal_Vh" style="color: var(--text-main);">0.029 m/s</b> | Aliran: <b id="auditVal_Re" style="color: var(--text-heading);">Subkritis</b>
+                </div>
+                <p id="auditDesc_Vh" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Kecepatan alir horisontal di bawah batas kritis resuspensi 0.05 m/s, endapan lumpur tidak teraduk kembali.
+                </p>
+              </div>
+
+              <!-- Card 5: Kebutuhan Flokulan & Kualitas Effluent TSS -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_TSS">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">5. Status Kepatuhan Baku Mutu TSS</span>
+                  <span id="auditBadge_TSS" class="kpi-status-badge badge-success">MEMENUHI BAKU MUTU</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  TSS Outlet: <b id="auditVal_TSSOut" style="color: #10b981;">182 mg/L</b> | Ambang Baku Mutu: <b id="auditVal_TSSLimit" style="color: #f59e0b;">≤ 200 mg/L</b>
+                </div>
+                <p id="auditDesc_TSS" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Kualitas air keluaran titik penaatan memenuhi Kepmen ESDM 1827 K/2018 & Permen LH 113/2003.
+                </p>
+              </div>
+
+              <!-- Card 6: Interval Pengerukan & Pemeliharaan -->
+              <div style="background: var(--bg-card-inner); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;" id="auditCard_Dredge">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-main);">6. Manajemen Pengerukan Lumpur KPL</span>
+                  <span id="auditBadge_Dredge" class="kpi-status-badge badge-warning">JADWAL RUTIN</span>
+                </div>
+                <div style="font-size: 12px; font-family: monospace; color: var(--text-muted); line-height: 1.4;">
+                  Interval Pengerukan: <b id="auditVal_DredgeDays" style="color: var(--text-main);">32 Hari</b> | Jam Kerja Alat: <b id="auditVal_Excavator" style="color: var(--text-heading);">36 Jam</b>
+                </div>
+                <p id="auditDesc_Dredge" style="font-size: 10px; color: var(--text-muted); margin-top: 5px;">
+                  Pengerukan wajib dijadwalkan sebelum sedimen melampaui 60% ruang lumpur untuk mencegah pendangkalan kolam.
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Rekomendasi Tindakan Korektif Resmi Inspektur Tambang -->
+            <div style="background: var(--rec-box-bg); border-left: 4px solid var(--rec-box-border); padding: 1rem; border-radius: 6px;">
+              <h4 style="color: var(--rec-box-border); font-size: 12px; font-weight: 800; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-triangle-exclamation"></i> TINDAKAN KOREKTIF & REKOMENDASI AUDIT KTT / KEPALA TEKNIK TAMBANG:
+              </h4>
+              <p id="auditCorrectiveActions" style="font-size: 11px; color: var(--rec-box-text); line-height: 1.5;">
+                Desain kolam telah mematuhi kaidah teknik pertambangan yang baik. Pertahankan kedalaman efektif dengan pengerukan Kompartemen 1 secara terjadwal.
+              </p>
+            </div>
+
+          </div>
 
           <!-- Floating Overlays -->
           <div class="canvas-overlay-ctrls" id="canvasControlsOverlay">
@@ -3720,6 +4025,178 @@
       }
     });
 
+    
+    // Switch to audit view handling
+    const origSwitchVisualView = switchVisualView;
+    switchVisualView = function(viewName) {
+      const auditPanel = document.getElementById('auditDashboardPanel');
+      const canvasEl = document.getElementById('mainCanvas');
+      const ctrlOverlay = document.getElementById('canvasControlsOverlay');
+      const legend = document.getElementById('canvasLegend');
+
+      if (viewName === 'audit') {
+        state.activeView = 'audit';
+        document.querySelectorAll('.view-tab-btn').forEach(btn => btn.classList.remove('active'));
+        const btnAudit = document.getElementById('btnViewAudit');
+        if (btnAudit) btnAudit.classList.add('active');
+
+        if (auditPanel) auditPanel.style.display = 'flex';
+        if (canvasEl) canvasEl.style.display = 'none';
+        if (ctrlOverlay) ctrlOverlay.style.display = 'none';
+        if (legend) legend.style.display = 'none';
+        updateAuditScorecardUI();
+        speakText("Mode evaluasi audit kelaikan settling pond inspektur tambang aktif.");
+        return;
+      }
+
+      if (auditPanel) auditPanel.style.display = 'none';
+      if (canvasEl) canvasEl.style.display = 'block';
+      origSwitchVisualView(viewName);
+    };
+
+    function updateAuditScorecardUI() {
+      const r = calcResults;
+      if (!r || !r.As) return;
+
+      // 1. Luas
+      const isAreaOk = r.As >= r.As_min;
+      const bArea = document.getElementById('auditBadge_Area');
+      const dArea = document.getElementById('auditDesc_Area');
+      document.getElementById('auditVal_As').innerText = `${r.As.toFixed(0)} m²`;
+      document.getElementById('auditVal_AsMin').innerText = `${r.As_min.toFixed(0)} m²`;
+      if (bArea) {
+        bArea.className = isAreaOk ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-danger';
+        bArea.innerText = isAreaOk ? 'MEMADAI' : 'TEMUAN KRITIS (KURANG LUAS)';
+      }
+      if (dArea) {
+        dArea.innerHTML = isAreaOk 
+          ? `Luas kolam mencukupi (+${Math.round(r.As - r.As_min)} m²). Surface overflow rate v0 (${(r.v0).toFixed(5)} m/s) lebih lambat dari kecepatan endap Stokes.` 
+          : `<b style="color:#ef4444;">Penyebab Air Keruh:</b> Luas kolam kurang ${Math.round(r.As_min - r.As)} m². Air mengalir terlalu cepat ke atas sehingga partikel lolos.`;
+      }
+
+      // 2. HRT
+      const isHrtOk = r.tr_ts_ratio >= 1.5;
+      const bHrt = document.getElementById('auditBadge_HRT');
+      const dHrt = document.getElementById('auditDesc_HRT');
+      document.getElementById('auditVal_tR').innerText = `${r.HRT_min.toFixed(1)} Menit`;
+      document.getElementById('auditVal_ts').innerText = `${r.ts_min.toFixed(1)} Menit`;
+      if (bHrt) {
+        bHrt.className = isHrtOk ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-danger';
+        bHrt.innerText = isHrtOk ? `AMAN (tR/ts = ${r.tr_ts_ratio.toFixed(1)}x)` : `KRITIS (tR/ts = ${r.tr_ts_ratio.toFixed(1)}x)`;
+      }
+      if (dHrt) {
+        dHrt.innerHTML = isHrtOk 
+          ? `Waktu retensi tR (${r.HRT_min.toFixed(1)} mnt) lebih besar dari waktu jatuh partikel ts (${r.ts_min.toFixed(1)} mnt). Pengendapan efektif.` 
+          : `<b style="color:#ef4444;">Penyebab Air Keruh:</b> Waktu retensi hidrolik terlalu singkat. Air keluar sebelum partikel sempat tenggelam ke dasar.`;
+      }
+
+      // 3. Arus Pintas L/W
+      const lw = state.pondLength / state.pondWidth;
+      const isLwOk = lw >= 3.0 && state.compartments >= 3;
+      const bLw = document.getElementById('auditBadge_ShortCircuit');
+      const dLw = document.getElementById('auditDesc_ShortCircuit');
+      document.getElementById('auditVal_LW').innerText = `${lw.toFixed(1)} : 1`;
+      document.getElementById('auditVal_Cells').innerText = `${state.compartments} Kompartemen`;
+      if (bLw) {
+        bLw.className = isLwOk ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-danger';
+        bLw.innerText = isLwOk ? 'SESUAI STANDAR' : 'TERJADI ARUS PINTAS';
+      }
+      if (dLw) {
+        dLw.innerHTML = isLwOk 
+          ? `Rasio L/W ${lw.toFixed(1)}:1 (standar ≥3:1) dan sekat baffle zig-zag efektif mencegah arus pintas (short-circuiting).` 
+          : `<b style="color:#ef4444;">Penyebab Air Keruh:</b> Rasio L/W rendah atau sekat kurang, menyebabkan arus pintas (air keruh langsung mengalir ke outlet).`;
+      }
+
+      // 4. Vh & Resuspensi
+      const isVhOk = r.Vh < 0.05;
+      const bVh = document.getElementById('auditBadge_Vh');
+      const dVh = document.getElementById('auditDesc_Vh');
+      document.getElementById('auditVal_Vh').innerText = `${r.Vh.toFixed(3)} m/s`;
+      document.getElementById('auditVal_Re').innerText = r.Re < 2000 ? `Re = ${Math.round(r.Re)} (Laminar)` : `Re = ${Math.round(r.Re)} (Turbulen)`;
+      if (bVh) {
+        bVh.className = isVhOk ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-danger';
+        bVh.innerText = isVhOk ? 'TENANG (< 0.05 m/s)' : 'BAHAYA RESUSPENSI (> 0.05 m/s)';
+      }
+      if (dVh) {
+        dVh.innerHTML = isVhOk 
+          ? `Kecepatan alir ${r.Vh.toFixed(3)} m/s di bawah batas kritis resuspensi 0.05 m/s.` 
+          : `<b style="color:#ef4444;">Penyebab Air Keruh:</b> Kecepatan alir terlalu deras, mengaduk kembali sedimen yang telah mengendap di dasar.`;
+      }
+
+      // 5. TSS & Baku Mutu
+      const bTss = document.getElementById('auditBadge_TSS');
+      const dTss = document.getElementById('auditDesc_TSS');
+      document.getElementById('auditVal_TSSOut').innerText = `${Math.round(r.tss_out)} mg/L`;
+      document.getElementById('auditVal_TSSLimit').innerText = `≤ ${state.tssTarget} mg/L`;
+      if (bTss) {
+        bTss.className = r.isCompliant ? 'kpi-status-badge badge-success' : 'kpi-status-badge badge-danger';
+        bTss.innerText = r.isCompliant ? 'MEMENUHI BAKU MUTU' : 'PELANGGARAN BAKU MUTU';
+      }
+      if (dTss) {
+        dTss.innerHTML = r.isCompliant 
+          ? `TSS terprediksi ${Math.round(r.tss_out)} mg/L memenuhi baku mutu Kepmen ESDM 1827 K/2018 (≤${state.tssTarget} mg/L).` 
+          : `<b style="color:#ef4444;">Peringatan Audit:</b> TSS ${Math.round(r.tss_out)} mg/L melampaui baku mutu ${state.tssTarget} mg/L. Wajib penanganan segera.`;
+      }
+
+      // 6. Dredge
+      document.getElementById('auditVal_DredgeDays').innerText = `${Math.round(r.days_to_dredge)} Hari`;
+      document.getElementById('auditVal_Excavator').innerText = `${r.excavator_hours.toFixed(0)} Jam`;
+
+      // Corrective actions text
+      const corEl = document.getElementById('auditCorrectiveActions');
+      if (corEl) {
+        if (!r.isCompliant) {
+          corEl.innerHTML = `<span style="color:#ef4444;font-weight:bold;">INSTRUKSI WAJIB AUDIT INSPEKTUR TAMBANG:</span> Air limpasan terindikasi keruh (${Math.round(r.tss_out)} mg/L > ${state.tssTarget} mg/L). Tindakan korektif: 1) Segera tambahkan dosis koagulan PAC di kompartemen 2 untuk mempercepat pengendapan partikel lempung; 2) Perpanjang kolam menjadi minimal ${Math.ceil(r.As_min / state.pondWidth)} meter; 3) Tambahkan sekat baffle minimal menjadi 4–5 kompartemen zig-zag.`;
+        } else {
+          corEl.innerHTML = `Desain KPL dinyatakan <b>MEMENUHI SYARAT KELAISAN TEKNIS</b> Kepmen ESDM No. 1827 K/30/MEM/2018 & Permen LH No. 113/2003. Efisiensi penyisihan TSS mencapai ${r.eta_percent.toFixed(1)}%. Lakukan pengerukan berkala setiap <b>${Math.round(r.days_to_dredge)} hari</b> untuk menjaga kapasitas efektif kolam.`;
+        }
+      }
+    }
+
+    // Berita Acara Modal handler
+    function openBeritaAcaraModal() {
+      const r = calcResults;
+      const now = new Date();
+      document.getElementById('baAuditDate').innerText = now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('baRegNo').innerText = `MINERBA/KPL-AUDIT/${now.getFullYear()}/${Math.floor(1000 + Math.random() * 9000)}`;
+      document.getElementById('baCommodity').innerText = document.getElementById('miningPreset').selectedOptions[0].text;
+      document.getElementById('baQin').innerText = `${r.Qin_total.toFixed(2)} m³/s (${(r.Qin_total * 3600).toFixed(0)} m³/jam)`;
+      document.getElementById('baVs').innerText = `${(r.Vs).toFixed(5)} m/s (${(r.Vs * 100).toFixed(3)} cm/s)`;
+      document.getElementById('baAs').innerText = `${r.As.toLocaleString()} m²`;
+      document.getElementById('baAsReq').innerText = `Wajib ≥ ${r.As_min.toFixed(0)} m² (As min)`;
+      document.getElementById('baAsStatus').innerText = r.As >= r.As_min ? 'MEMENUHI' : 'TIDAK MEMENUHI';
+      document.getElementById('baAsStatus').style.color = r.As >= r.As_min ? '#059669' : '#dc2626';
+
+      document.getElementById('baHRT').innerText = `${r.HRT_hr.toFixed(2)} Jam (${r.HRT_min.toFixed(0)} Menit)`;
+      document.getElementById('baHRTStatus').innerText = r.tr_ts_ratio >= 1.5 ? 'MEMENUHI' : 'KURANG';
+      document.getElementById('baHRTStatus').style.color = r.tr_ts_ratio >= 1.5 ? '#059669' : '#dc2626';
+
+      const lw = state.pondLength / state.pondWidth;
+      document.getElementById('baLW').innerText = `${lw.toFixed(1)} : 1 (${state.compartments} Kompartemen)`;
+      document.getElementById('baLWStatus').innerText = lw >= 3.0 ? 'MEMENUHI' : 'ARUS PINTAS';
+      document.getElementById('baLWStatus').style.color = lw >= 3.0 ? '#059669' : '#dc2626';
+
+      document.getElementById('baVh').innerText = `${r.Vh.toFixed(3)} m/s`;
+      document.getElementById('baTSSOut').innerText = `${Math.round(r.tss_out)} mg/L`;
+      document.getElementById('baTSSOut').style.color = r.isCompliant ? '#059669' : '#dc2626';
+      document.getElementById('baTSSStatus').innerText = r.isCompliant ? 'MEMENUHI BAKU MUTU' : 'PELANGGARAN BAKU MUTU';
+      document.getElementById('baTSSStatus').style.color = r.isCompliant ? '#059669' : '#dc2626';
+
+      const dirEl = document.getElementById('baDirectives');
+      if (r.isCompliant) {
+        dirEl.innerHTML = `Berdasarkan evaluasi hidrolika dan sedimentasi, kolam pengendap KPL dinyatakan <b>MEMENUHI KAIDAH TEKNIK PERTAMBANGAN YANG BAIK</b> sesuai Kepmen ESDM No. 1827 K/30/MEM/2018 Lampiran VIII. Kualitas air limpasan terprediksi ${Math.round(r.tss_out)} mg/L di bawah baku mutu Permen LH 113/2003. Rekomendasi: Wajib melakukan pengerukan lumpur dasar secara berkala setiap <b>${Math.round(r.days_to_dredge)} hari sekali</b>.`;
+      } else {
+        dirEl.innerHTML = `<b style="color:#dc2626;">TEMUAN AUDIT KRITIS:</b> Air limpasan pada titik penaatan KPL berpotensi keruh (${Math.round(r.tss_out)} mg/L melebihi ambang batas baku mutu ${state.tssTarget} mg/L). Berdasarkan Kepmen ESDM 1827 K/2018, KTT diinstruksikan untuk: (1) Memperbesar dimensi kolam menjadi minimal ${Math.ceil(r.As_min / state.pondWidth)} meter; (2) Memasang sekat baffle zig-zag minimal 4 kompartemen; (3) Membubuhkan zat flokulan PAC di inlet kompartemen 2; batas waktu pemenuhan perbaikan maksimal 14 hari kalender.`;
+      }
+
+      document.getElementById('modalBeritaAcara').classList.add('open');
+      speakText("Membuka Berita Acara evaluasi kelaikan KPL Inspeksi Minerba.");
+    }
+
+    function closeBeritaAcaraModal() {
+      document.getElementById('modalBeritaAcara').classList.remove('open');
+    }
+
     // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
       try {
@@ -3740,5 +4217,150 @@
       setTimeout(dismissLoadingScreen, 2200);
     });
   </script>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: BERITA ACARA EVALUASI KELAIKAN TEKNIS KPL (INSPEKTUR TAMBANG A4) -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" id="modalBeritaAcara" onclick="if(event.target===this) closeBeritaAcaraModal()">
+    <div class="modal-box" style="width: 950px;">
+      <div class="modal-header" style="border-bottom-color: #ef4444;">
+        <h2 style="color: #f87171; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-stamp"></i> Berita Acara Evaluasi Teknis KPL (Inspeksi Minerba KESDM)
+        </h2>
+        <div>
+          <button class="btn btn-emerald" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak / Simpan PDF</button>
+          <button class="btn btn-secondary" onclick="closeBeritaAcaraModal()">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body" id="printBeritaAcaraArea" style="background: white; color: #0f172a; padding: 2.5rem; font-family: 'Times New Roman', serif;">
+        
+        <!-- KOP DITJEN MINERBA KESDM -->
+        <div style="border-bottom: 2.5px double #0f172a; padding-bottom: 12px; margin-bottom: 18px; text-align: center;">
+          <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 2px; text-transform: uppercase;">KEMENTERIAN ENERGI DAN SUMBER DAYA MINERAL REPUBLIK INDONESIA</h3>
+          <h4 style="font-size: 11pt; font-weight: bold; margin-bottom: 2px; text-transform: uppercase;">DIREKTORAT JENDERAL MINERAL DAN BATUBARA</h4>
+          <h2 style="font-size: 14pt; font-weight: 900; margin-top: 8px; margin-bottom: 4px; text-transform: uppercase; color: #1e3a8a;">BERITA ACARA EVALUASI KELAIKAN TEKNIS KOLAM PENGENDAP LUMPUR (KPL)</h2>
+          <p style="font-size: 9pt; color: #475569; font-style: italic;">Dasar Hukum: Kepmen ESDM No. 1827 K/30/MEM/2018 Lampiran VIII & Permen LH No. 113 Tahun 2003</p>
+          <p style="font-size: 9pt; font-family: monospace; font-weight: bold; margin-top: 4px;">NO. REGISTRASI AUDIT: <span id="baRegNo">MINERBA/KPL-AUDIT/2026/0412</span></p>
+        </div>
+
+        <!-- 1. IDENTITAS PEMERIKSAAN -->
+        <div style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 10pt; font-weight: bold; border-bottom: 1px solid #94a3b8; padding-bottom: 3px; margin-bottom: 6px;">I. IDENTITAS OPERASI PERTAMBANGAN & LOKASI PEMERIKSAAN</h4>
+          <table style="width: 100%; font-size: 9pt; border-collapse: collapse;">
+            <tr>
+              <td style="width: 28%; padding: 3px 4px; font-weight: bold;">Nama Usaha / PIT Tambang:</td>
+              <td style="width: 72%; padding: 3px 4px;" id="baCompany">PT Tambang Energi Nusantara - PIT Barat</td>
+            </tr>
+            <tr>
+              <td style="padding: 3px 4px; font-weight: bold;">Jenis Komoditas:</td>
+              <td style="padding: 3px 4px;" id="baCommodity">Batubara (Kalimantan Timur)</td>
+            </tr>
+            <tr>
+              <td style="padding: 3px 4px; font-weight: bold;">Tanggal Pelaksanaan Audit:</td>
+              <td style="padding: 3px 4px;" id="baAuditDate">12 Oktober 2026</td>
+            </tr>
+            <tr>
+              <td style="padding: 3px 4px; font-weight: bold;">Nama Kolam Pengendap:</td>
+              <td style="padding: 3px 4px;">Settling Pond KPL-01 (Titik Penaatan Lingkungan)</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- 2. PARAMETER TEKNIS HASIL EVALUASI -->
+        <div style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 10pt; font-weight: bold; border-bottom: 1px solid #94a3b8; padding-bottom: 3px; margin-bottom: 6px;">II. PARAMETER DESAIN HIDROLIKA & SEDIMENTASI STOKES</h4>
+          <table style="width: 100%; font-size: 8.5pt; border-collapse: collapse; border: 1px solid #475569;">
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="border: 1px solid #475569; padding: 5px; text-align: left;">Parameter Teknis KPL</th>
+                <th style="border: 1px solid #475569; padding: 5px; text-align: center;">Hasil Uji / Desain</th>
+                <th style="border: 1px solid #475569; padding: 5px; text-align: left;">Ambang Batas / Standar Regulasi</th>
+                <th style="border: 1px solid #475569; padding: 5px; text-align: center;">Status Kelaikan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Total Debit Masuk (Qin)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baQin">1.82 m³/s</td>
+                <td style="border: 1px solid #475569; padding: 4px;">Kapasitas puncak limpasan 5 tahunan</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold; color: #059669;">MEMADAI</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Kecepatan Endap Stokes (Vs)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baVs">0.00062 m/s</td>
+                <td style="border: 1px solid #475569; padding: 4px;">Partikel kritis lempung/lanau 0.025 mm</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold; color: #059669;">TERUKUR</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Luas Permukaan Kolam (As)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baAs">2,250 m²</td>
+                <td style="border: 1px solid #475569; padding: 4px;" id="baAsReq">Wajib ≥ 1,950 m² (As min)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold;" id="baAsStatus">MEMENUHI</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Waktu Retensi Hidrolik (HRT)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baHRT">1.85 Jam (111 Menit)</td>
+                <td style="border: 1px solid #475569; padding: 4px;">Wajib tR ≥ 1.5x waktu endap partikel</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold;" id="baHRTStatus">MEMENUHI</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Rasio Panjang/Lebar (L/W)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baLW">3.6 : 1</td>
+                <td style="border: 1px solid #475569; padding: 4px;">Kaidah teknik: L/W ≥ 3:1 (Cegah Arus Pintas)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold;" id="baLWStatus">MEMENUHI</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #475569; padding: 4px;">Kecepatan Alir Horisontal (Vh)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center;" id="baVh">0.029 m/s</td>
+                <td style="border: 1px solid #475569; padding: 4px;">Maks. 0.05 m/s (Anti-Resuspensi Dasar)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: bold; color: #059669;">AMAN</td>
+              </tr>
+              <tr style="background: #fdf2f8;">
+                <td style="border: 1px solid #475569; padding: 4px; font-weight: bold;">TSS Effluent Titik Penaatan</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: 900; color: #059669;" id="baTSSOut">182 mg/L</td>
+                <td style="border: 1px solid #475569; padding: 4px; font-weight: bold;">Maks. 300 mg/L (Permen LH 113) / 200 mg/L (ESDM)</td>
+                <td style="border: 1px solid #475569; padding: 4px; text-align: center; font-weight: 900;" id="baTSSStatus">MEMENUHI</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3. TEMUAN & TINDAKAN KOREKTIF -->
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 10pt; font-weight: bold; border-bottom: 1px solid #94a3b8; padding-bottom: 3px; margin-bottom: 6px;">III. KESIMPULAN AUDIT & INSTRUKSI TINDAKAN KOREKTIF</h4>
+          <div style="font-size: 8.5pt; line-height: 1.5; padding: 6px 10px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px;" id="baDirectives">
+            Berdasarkan pemeriksaan teknis, settling pond KPL-01 memenuhi standar kaidah teknik pertambangan yang baik. Air limpasan keluar titik penaatan memenuhi baku mutu lingkungan. Instruksi pemeliharaan: Wajib melakukan pengerukan kompartemen sedimentasi primer maksimal setiap 32 hari operasional.
+          </div>
+        </div>
+
+        <!-- 4. TANDA TANGAN RESMI -->
+        <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 9pt;">
+          <div style="text-align: center; width: 230px;">
+            <p>Mengetahui & Menyetujui,</p>
+            <p style="font-weight: bold; margin-top: 2px;">Kepala Teknik Tambang (KTT)</p>
+            <div style="height: 55px;"></div>
+            <p style="border-top: 1px solid #0f172a; padding-top: 2px; font-weight: bold;">( .................................................. )</p>
+            <p style="font-size: 8pt; color: #64748b;">Penanggung Jawab Operasional</p>
+          </div>
+
+          <div style="text-align: center; width: 230px;">
+            <p>Diperiksa & Disahkan Oleh,</p>
+            <p style="font-weight: bold; margin-top: 2px;">Inspektur Tambang Penelaah</p>
+            <div style="height: 55px;"></div>
+            <p style="border-top: 1px solid #0f172a; padding-top: 2px; font-weight: bold;">( Tim Inspeksi Minerba KESDM )</p>
+            <p style="font-size: 8pt; color: #64748b;">NIP. Penata Tingkat I / Minerba</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeBeritaAcaraModal()">Tutup</button>
+        <button class="btn btn-emerald" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak Berita Acara</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
